@@ -1,0 +1,1872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HR AI Toolkit</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--accent:#4A6FA5;--accent-light:#e8eef6;--accent-dark:#3a5a8a;--gray-50:#f9fafb;--gray-100:#f3f4f6;--gray-200:#e5e7eb;--gray-300:#d1d5db;--gray-400:#9ca3af;--gray-500:#6b7280;--gray-600:#4b5563;--gray-700:#374151;--gray-800:#1f2937;--gray-900:#111827;--radius:8px;--shadow:0 1px 3px rgba(0,0,0,.1),0 1px 2px rgba(0,0,0,.06);--shadow-md:0 4px 6px rgba(0,0,0,.07),0 2px 4px rgba(0,0,0,.06);--shadow-lg:0 10px 15px rgba(0,0,0,.1),0 4px 6px rgba(0,0,0,.05)}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;color:var(--gray-800);background:#fff;line-height:1.6}
+a{color:var(--accent);text-decoration:none}
+
+/* NAV */
+nav{background:#fff;border-bottom:1px solid var(--gray-200);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:8px;height:60px;overflow-x:auto}
+.nav-logo{font-weight:700;font-size:18px;color:var(--accent);margin-right:24px;white-space:nowrap}
+.nav-btn{padding:8px 16px;border-radius:var(--radius);border:none;background:transparent;font-size:14px;font-weight:500;color:var(--gray-600);cursor:pointer;white-space:nowrap;transition:all .15s}
+.nav-btn:hover{background:var(--gray-100);color:var(--gray-800)}
+.nav-btn.active{background:var(--accent);color:#fff}
+
+/* LAYOUT */
+.container{max-width:1100px;margin:0 auto;padding:32px 24px}
+.page{display:none}
+.page.active{display:block}
+
+/* SHARED */
+h1{font-size:28px;font-weight:700;color:var(--gray-900);margin-bottom:8px}
+h2{font-size:22px;font-weight:600;color:var(--gray-900);margin-bottom:16px}
+h3{font-size:16px;font-weight:600;color:var(--gray-800);margin-bottom:8px}
+.subtitle{color:var(--gray-500);font-size:15px;margin-bottom:32px}
+input[type="text"],textarea,select{width:100%;padding:10px 14px;border:1px solid var(--gray-300);border-radius:var(--radius);font-size:14px;font-family:inherit;transition:border .15s}
+input[type="text"]:focus,textarea:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(74,111,165,.15)}
+textarea{resize:vertical;min-height:80px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--radius);border:none;font-size:14px;font-weight:500;cursor:pointer;transition:all .15s}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:var(--accent-dark)}
+.btn-secondary{background:var(--gray-100);color:var(--gray-700)}
+.btn-secondary:hover{background:var(--gray-200)}
+.btn-sm{padding:6px 12px;font-size:13px}
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:600;background:var(--accent-light);color:var(--accent)}
+
+/* SEARCH & FILTERS */
+.search-bar{position:relative;margin-bottom:20px}
+.search-bar input{padding-left:40px}
+.search-bar svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--gray-400)}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px}
+.filter-pill{padding:6px 14px;border-radius:20px;border:1px solid var(--gray-300);background:#fff;font-size:13px;font-weight:500;color:var(--gray-600);cursor:pointer;transition:all .15s}
+.filter-pill:hover{border-color:var(--accent);color:var(--accent)}
+.filter-pill.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+/* CARDS */
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:20px}
+.card{background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius);padding:20px;transition:box-shadow .15s}
+.card:hover{box-shadow:var(--shadow-md)}
+.card-title{font-size:15px;font-weight:600;color:var(--gray-900);margin:8px 0}
+.card-prompt{font-size:13px;color:var(--gray-600);line-height:1.7;white-space:pre-wrap;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;transition:all .2s}
+.card-prompt.expanded{-webkit-line-clamp:unset;display:block}
+.card-actions{display:flex;gap:8px;margin-top:12px;align-items:center}
+.expand-btn{font-size:13px;color:var(--accent);cursor:pointer;background:none;border:none;font-weight:500}
+.copy-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--gray-800);color:#fff;padding:10px 24px;border-radius:var(--radius);font-size:14px;transition:transform .3s;z-index:999}
+.copy-toast.show{transform:translateX(-50%) translateY(0)}
+.no-results{text-align:center;padding:48px 0;color:var(--gray-400);font-size:15px}
+
+/* TOOL 2 - BUILDER */
+.builder-layout{display:grid;grid-template-columns:1fr 1fr;gap:32px}
+@media(max-width:768px){.builder-layout{grid-template-columns:1fr}.card-grid{grid-template-columns:1fr}}
+.field-group{margin-bottom:20px}
+.field-group label{display:block;font-weight:600;font-size:14px;color:var(--gray-700);margin-bottom:6px}
+.field-group .hint{font-size:12px;color:var(--gray-400);margin-top:4px}
+.preview-box{background:var(--gray-50);border:1px solid var(--gray-200);border-radius:var(--radius);padding:20px;min-height:200px;white-space:pre-wrap;font-size:14px;line-height:1.7;color:var(--gray-700)}
+.score-bar{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.score-circle{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:#fff;flex-shrink:0}
+.score-feedback{font-size:14px;color:var(--gray-600)}
+.pattern-card{background:var(--gray-50);border:1px solid var(--gray-200);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+.pattern-card h4{font-size:14px;font-weight:600;color:var(--gray-800);margin-bottom:4px}
+.pattern-card p{font-size:13px;color:var(--gray-500);margin-bottom:8px}
+.pattern-card pre{background:#fff;border:1px solid var(--gray-200);border-radius:4px;padding:12px;font-size:12px;overflow-x:auto;white-space:pre-wrap}
+.example-pills{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px}
+
+/* TOOL 3 - FRAMEWORK */
+.task-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin-bottom:32px}
+.task-card{background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius);padding:20px;cursor:pointer;transition:all .15s;text-align:center}
+.task-card:hover{border-color:var(--accent);box-shadow:var(--shadow)}
+.task-card.selected{border-color:var(--accent);background:var(--accent-light)}
+.task-card .icon{font-size:28px;margin-bottom:8px}
+.task-card h4{font-size:14px;font-weight:600;color:var(--gray-800)}
+.framework-section{background:var(--gray-50);border:1px solid var(--gray-200);border-radius:var(--radius);padding:24px;margin-bottom:20px}
+.framework-section h3{color:var(--accent);margin-bottom:12px}
+.template-output{background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius);padding:20px;white-space:pre-wrap;font-size:14px;line-height:1.7;color:var(--gray-700);margin-top:20px;position:relative}
+</style>
+</head>
+<body>
+
+<nav>
+<div class="nav-inner">
+<div class="nav-logo">HR AI Toolkit</div>
+<button class="nav-btn active" onclick="showPage('library')">Prompt Library</button>
+<button class="nav-btn" onclick="showPage('builder')">Prompt Builder</button>
+<button class="nav-btn" onclick="showPage('framework')">Framework Tool</button>
+</div>
+</nav>
+
+<div id="page-library" class="container page active">
+<h1>HR Prompt Library</h1>
+<p class="subtitle">40+ ready-to-use AI prompts across the full employee lifecycle. Search, filter, copy.</p>
+<div class="search-bar">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+<input type="text" id="lib-search" placeholder="Search prompts..." oninput="filterLibrary()">
+</div>
+<div class="filters" id="lib-filters"></div>
+<div class="card-grid" id="lib-grid"></div>
+<div class="no-results" id="lib-no-results" style="display:none">No prompts match your search.</div>
+</div>
+
+<div id="page-builder" class="container page">
+<h1>Prompt Engineering Builder</h1>
+<p class="subtitle">Learn to craft effective AI prompts for HR. Fill in the ingredients and watch your prompt come together.</p>
+<div class="example-pills" id="builder-examples"></div>
+<div class="builder-layout">
+<div>
+<div class="field-group">
+<label>Role</label>
+<input type="text" id="b-role" placeholder="e.g. You are an experienced HR business partner" oninput="updateBuilder()">
+<div class="hint">Who should the AI act as?</div>
+</div>
+<div class="field-group">
+<label>Task</label>
+<textarea id="b-task" placeholder="e.g. Write a job description for a Senior Product Manager" oninput="updateBuilder()"></textarea>
+<div class="hint">What do you want the AI to do?</div>
+</div>
+<div class="field-group">
+<label>Context</label>
+<textarea id="b-context" placeholder="e.g. This is for a Series B fintech startup with 120 employees" oninput="updateBuilder()"></textarea>
+<div class="hint">Background information the AI needs to know</div>
+</div>
+<div class="field-group">
+<label>Format</label>
+<input type="text" id="b-format" placeholder="e.g. Use bullet points, keep under 500 words" oninput="updateBuilder()">
+<div class="hint">How should the output be structured?</div>
+</div>
+<div class="field-group">
+<label>Examples</label>
+<textarea id="b-examples" placeholder="e.g. Here's a sample job description we liked: ..." oninput="updateBuilder()"></textarea>
+<div class="hint">Reference examples to guide the output</div>
+</div>
+<div class="field-group">
+<label>Tone</label>
+<input type="text" id="b-tone" placeholder="e.g. Professional but approachable" oninput="updateBuilder()">
+<div class="hint">What voice or style should the AI use?</div>
+</div>
+</div>
+<div>
+<div class="score-bar">
+<div class="score-circle" id="b-score-circle" style="background:var(--gray-300)">0</div>
+<div>
+<div style="font-weight:600;font-size:15px;color:var(--gray-800)">Prompt Score</div>
+<div class="score-feedback" id="b-feedback">Fill in fields to build your prompt.</div>
+</div>
+</div>
+<h3>Live Preview</h3>
+<div class="preview-box" id="b-preview">Your prompt will appear here as you type...</div>
+<div style="margin-top:12px"><button class="btn btn-primary" onclick="copyText(document.getElementById('b-preview').textContent)">Copy Prompt</button> <button class="btn btn-secondary" onclick="clearBuilder()">Clear All</button></div>
+<div style="margin-top:32px">
+<h3>Prompt Patterns</h3>
+<div class="pattern-card">
+<h4>Chain-of-Thought</h4>
+<p>Ask the AI to reason step by step before giving a final answer.</p>
+<pre>Think through this step by step:
+1. First, consider the employee's tenure and role.
+2. Then, evaluate the performance data.
+3. Next, compare against the team benchmarks.
+4. Finally, provide your recommendation with reasoning.</pre>
+</div>
+<div class="pattern-card">
+<h4>Few-Shot Examples</h4>
+<p>Provide examples of the desired input/output format.</p>
+<pre>Here are examples of good feedback:
+Input: "Late to meetings"
+Output: "I've noticed you've arrived after the scheduled start time in 3 of our last 5 team meetings. Punctuality helps us respect everyone's time."
+
+Input: "Great presentation"
+Output: "Your Q3 results presentation was excellent — the data visualisation made complex metrics accessible, and stakeholders commented on the clarity."
+
+Now write feedback for: [your situation]</pre>
+</div>
+<div class="pattern-card">
+<h4>Structured Output</h4>
+<p>Tell the AI exactly what format and sections you want.</p>
+<pre>Provide your response in this exact format:
+
+## Summary (2-3 sentences)
+## Key Strengths (3 bullet points)
+## Areas for Development (3 bullet points)
+## Recommended Actions (numbered list)
+## Timeline (table with columns: Action, Owner, Due Date)</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="page-framework" class="container page">
+<h1>HR Framework Tool</h1>
+<p class="subtitle">Pick an HR task, customise the guided template, and get a ready-to-use prompt.</p>
+<div class="task-grid" id="fw-tasks"></div>
+<div id="fw-builder" style="display:none"></div>
+</div>
+
+<div class="copy-toast" id="toast">Copied to clipboard!</div>
+
+<script>
+/* ========== NAVIGATION ========== */
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+}
+
+/* ========== TOAST ========== */
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg||'Copied to clipboard!';
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2000);
+}
+function copyText(text){
+  navigator.clipboard.writeText(text).then(()=>showToast());
+}
+
+/* ========== TOOL 1: PROMPT LIBRARY ========== */
+const stages=[
+  "Recruitment & Job Descriptions",
+  "Interviewing & Assessment",
+  "Onboarding",
+  "Performance Management",
+  "Learning & Development",
+  "Employee Relations",
+  "Offboarding & Exit",
+  "HR Communications & Policies"
+];
+
+const prompts=[
+  // --- Recruitment & Job Descriptions ---
+  {stage:stages[0],title:"Inclusive Job Description Writer",prompt:`You are a talent acquisition specialist with expertise in inclusive hiring. Write a job description for the role of [Job Title] at [Company Name].
+
+Requirements:
+- Company size: [size], Industry: [industry]
+- Department: [department], Reports to: [manager title]
+- Location: [location/remote/hybrid]
+
+Include these sections:
+1. An engaging opening paragraph (avoid gendered language and corporate jargon)
+2. About the company (2-3 sentences)
+3. What you'll do (6-8 bullet points focusing on impact, not just tasks)
+4. What you bring (separate must-haves from nice-to-haves; limit must-haves to 5)
+5. What we offer (compensation philosophy, benefits highlights)
+6. Our commitment to inclusion (authentic, specific statement)
+
+Use "you/your" language throughout. Avoid superlatives like "rockstar" or "ninja." Aim for a Flesch reading ease score above 60.`},
+  {stage:stages[0],title:"Sourcing Boolean Search Generator",prompt:`You are a technical recruiter expert in Boolean search. Generate 5 different Boolean search strings I can use on LinkedIn, GitHub, and Google to find candidates for this role:
+
+Role: [Job Title]
+Key skills: [skill 1, skill 2, skill 3]
+Experience level: [junior/mid/senior]
+Industry preference: [industry or "open"]
+Location: [location or "remote"]
+
+For each search string:
+1. Provide the exact Boolean string ready to paste
+2. Explain which platform it works best on
+3. Note what type of candidate it will surface
+4. Suggest one modification to broaden or narrow results
+
+Also suggest 3 alternative job titles candidates might use on their profiles.`},
+  {stage:stages[0],title:"Employer Branding Content Creator",prompt:`You are an employer brand strategist. Create a set of recruitment marketing content for [Company Name] to attract [target role/persona] candidates.
+
+Company info:
+- Industry: [industry], Size: [headcount]
+- Culture keywords: [e.g., innovative, collaborative, flexible]
+- Key EVP pillars: [e.g., career growth, work-life balance, mission-driven]
+
+Produce:
+1. One LinkedIn job post (under 150 words, conversational, includes a hook question)
+2. One "Day in the Life" employee story outline (5 story beats)
+3. Three Instagram/social caption options (under 50 words each, with hashtag suggestions)
+4. One careers page blurb (100 words, SEO-friendly)
+5. Five headline options for a recruitment ad campaign
+
+Tone should be authentic, not corporate. Show, don't tell.`},
+  {stage:stages[0],title:"Salary Benchmarking Research Prompt",prompt:`You are a compensation analyst. Help me research and structure a salary benchmarking analysis for the role of [Job Title].
+
+Context:
+- Company location: [city/region]
+- Company size: [headcount], Stage: [startup/growth/enterprise]
+- Industry: [industry]
+- Current salary range offered: [range or "not yet set"]
+
+Please provide:
+1. Key factors that influence compensation for this role (list 6-8 with brief explanations)
+2. A framework for evaluating salary data sources and their reliability
+3. Recommended salary structure with base, bonus, and equity components
+4. A comparison template I can fill in with data from Glassdoor, Levels.fyi, Payscale, and LinkedIn Salary
+5. Talking points for justifying the proposed range to hiring managers
+6. Red flags that our range may be below market
+
+Format as a structured report with clear section headers.`},
+  {stage:stages[0],title:"Recruitment Pipeline Analyser",prompt:`You are an HR data analyst specialising in recruitment metrics. Analyse the following recruitment pipeline data and provide actionable insights.
+
+Current pipeline for [Job Title]:
+- Applications received: [number]
+- Phone screens completed: [number]
+- Technical/skills assessments: [number]
+- Hiring manager interviews: [number]
+- Final interviews: [number]
+- Offers extended: [number]
+- Offers accepted: [number]
+- Time to fill target: [days]
+- Actual time to fill: [days]
+
+Please provide:
+1. Conversion rates at each stage with industry benchmark comparisons
+2. Identify the biggest drop-off point and 3 hypotheses for why
+3. Calculate the candidate-to-hire ratio and assess efficiency
+4. Recommend 3 specific actions to improve the weakest conversion point
+5. Suggest what additional data points I should track
+6. Provide a monthly dashboard template for ongoing monitoring`},
+
+  // --- Interviewing & Assessment ---
+  {stage:stages[1],title:"Behavioural Interview Question Set",prompt:`You are an industrial-organisational psychologist specialising in structured interviews. Create a behavioural interview question set for the role of [Job Title].
+
+Key competencies to assess:
+1. [Competency 1, e.g., Problem Solving]
+2. [Competency 2, e.g., Collaboration]
+3. [Competency 3, e.g., Leadership]
+4. [Competency 4, e.g., Adaptability]
+
+For each competency, provide:
+- 2 behavioural questions (past-focused, using "Tell me about a time when...")
+- 1 situational question (future-focused, using "What would you do if...")
+- A scoring rubric with clear indicators for scores 1 (Poor), 3 (Acceptable), and 5 (Excellent)
+- One follow-up probe question for each main question
+- Common red flags to watch for in responses
+
+End with 3 candidate experience tips to make the interview feel fair and welcoming.`},
+  {stage:stages[1],title:"Interview Scorecard Designer",prompt:`You are a hiring process designer. Create a comprehensive interview scorecard for evaluating candidates for [Job Title].
+
+Role requirements:
+- Must-have skills: [list]
+- Nice-to-have skills: [list]
+- Team dynamics: [describe the team]
+- Manager's top priority: [what matters most]
+
+Design a scorecard that includes:
+1. Header section (candidate name, interviewer, date, stage)
+2. 6-8 evaluation criteria with clear definitions
+3. A 1-5 rating scale with behavioural anchors for each criterion
+4. Space for evidence/notes tied to each rating
+5. Cultural-add assessment (not culture-fit) with 3 specific dimensions
+6. Overall recommendation with forced choice: Strong Yes / Yes / No / Strong No
+7. A bias check section with 3 reflection questions for the interviewer
+
+Format as a clean, printable template.`},
+  {stage:stages[1],title:"Technical Assessment Designer",prompt:`You are a talent assessment expert. Design a take-home technical assessment for [Job Title] candidates.
+
+Role level: [junior/mid/senior]
+Core skills to test: [skill 1, skill 2, skill 3]
+Department: [department]
+Time limit you want to set: [e.g., 2-3 hours]
+
+Create:
+1. A realistic, job-relevant scenario/brief (not a trick question)
+2. Clear instructions and expectations (word count/deliverable format)
+3. 3-4 specific evaluation criteria with point allocations totalling 100
+4. A grading rubric with examples of weak, acceptable, and strong responses for each criterion
+5. A candidate-friendly intro explaining why we use this assessment
+6. Accommodations statement for candidates who may need adjustments
+7. A template email to send with the assessment (professional, warm tone)
+
+The task should reflect actual work they would do on the job, not abstract puzzles.`},
+  {stage:stages[1],title:"Interview Debrief Facilitator",prompt:`You are an HR business partner facilitating a hiring debrief. Help me structure and run an effective interview debrief for [Job Title].
+
+Scenario:
+- Number of interviewers: [number]
+- Interview stages completed: [list stages]
+- Candidate name: [name]
+- Timeline pressure: [urgent / standard / flexible]
+
+Provide:
+1. A debrief meeting agenda (30-minute format)
+2. Opening framing statement to set ground rules (no anchoring bias, evidence-based discussion)
+3. A structured discussion flow: each interviewer shares their independent assessment before group discussion
+4. 5 key questions to ask the group that surface hidden concerns
+5. A framework for resolving disagreements (when interviewers scored differently)
+6. A final decision template with space for: decision, conditions, next steps, and offer details
+7. Bias check: 3 common debrief biases and how to mitigate them in real-time`},
+  {stage:stages[1],title:"Candidate Rejection Email Writer",prompt:`You are a compassionate HR communications specialist. Write candidate rejection emails for different stages of the interview process.
+
+Company: [Company Name]
+Role: [Job Title]
+Company tone: [e.g., warm and professional / casual and friendly]
+
+Write three versions:
+
+1. POST-APPLICATION (didn't reach interview):
+- Acknowledge their effort
+- Brief, respectful, no false specificity
+- Encourage future applications if genuine
+
+2. POST-INTERVIEW (interviewed but not selected):
+- Reference something specific about their interview: [placeholder for personal detail]
+- Give one piece of genuine, constructive feedback
+- Offer to stay connected
+
+3. FINAL-ROUND REJECTION (strong candidate, close decision):
+- Acknowledge how far they progressed and the difficulty of the decision
+- Provide meaningful feedback
+- Ask if they'd be open to future opportunities
+- Offer a phone call to discuss
+
+Each email should be under 150 words. Never use "unfortunately" as the first word.`},
+
+  // --- Onboarding ---
+  {stage:stages[2],title:"30-60-90 Day Onboarding Plan",prompt:`You are an onboarding programme designer. Create a detailed 30-60-90 day onboarding plan for a new [Job Title] joining [Company Name].
+
+Context:
+- Department: [department]
+- Team size: [number]
+- Reports to: [manager title]
+- Work arrangement: [onsite/remote/hybrid]
+- Start date: [date]
+
+For each phase, include:
+FIRST 30 DAYS (Learn):
+- 5 specific learning goals
+- Key people to meet (roles, not names) and why
+- Systems/tools to learn
+- Daily/weekly check-in schedule with manager
+
+DAYS 31-60 (Contribute):
+- 3 small wins or deliverables to aim for
+- Cross-functional introductions
+- Begin independent work on [area]
+- Bi-weekly milestone check-ins
+
+DAYS 61-90 (Own):
+- 2 significant deliverables or projects to lead
+- Performance expectations calibration
+- Development goals conversation
+- 90-day review format and criteria
+
+Include a one-page checklist version at the end.`},
+  {stage:stages[2],title:"Welcome Message & First-Day Schedule",prompt:`You are an employee experience designer. Create a warm, comprehensive welcome package for a new hire starting as [Job Title].
+
+Company: [Company Name]
+Manager: [Manager Name]
+Team: [Team Name]
+Start date: [Date]
+Work arrangement: [onsite/remote/hybrid]
+
+Create:
+1. A welcome email from the manager (warm, personal, max 200 words) that:
+   - Expresses genuine excitement
+   - Shares one thing the team is looking forward to
+   - Sets expectations for the first day
+   - Provides a single point of contact for questions
+
+2. A first-day schedule (hour by hour, 9am-5pm) including:
+   - IT setup and system access
+   - Welcome meeting with manager (30 min)
+   - Team lunch or virtual coffee
+   - HR orientation session
+   - Workspace tour (or virtual workspace walkthrough)
+   - End-of-day check-in
+
+3. A "Quick Start" card with:
+   - Wi-Fi/VPN details placeholder
+   - Key Slack channels to join
+   - Important bookmarks/links
+   - Who to ask for what (5 common questions mapped to people)`},
+  {stage:stages[2],title:"Onboarding Buddy Guide",prompt:`You are an HR programme manager. Create a comprehensive Onboarding Buddy Guide for employees who will serve as buddies to new hires at [Company Name].
+
+Programme details:
+- Buddy assignment duration: [e.g., first 90 days]
+- Expected time commitment: [e.g., 30 min/week]
+- Department: [department or "company-wide"]
+
+Include:
+1. Welcome letter to the buddy explaining their role and why it matters
+2. The difference between a buddy, a mentor, and a manager (comparison table)
+3. Week-by-week checklist of buddy activities (weeks 1-12):
+   - Week 1: Daily check-ins, lunch together, office/tool navigation
+   - Weeks 2-4: Bi-weekly coffee, introduce to wider team, answer unwritten-rule questions
+   - Weeks 5-8: Weekly check-in, help navigate first project challenges
+   - Weeks 9-12: Bi-weekly, help prep for 90-day review, transition to peer relationship
+4. 10 great conversation starters for buddy meetings
+5. What to do if the new hire shares a concern or problem
+6. Do's and Don'ts list (5 each)
+7. How to escalate issues to HR or the manager appropriately`},
+  {stage:stages[2],title:"Remote Onboarding Experience Designer",prompt:`You are a remote work experience designer. Create a virtual onboarding programme for a new [Job Title] who will be working fully remotely at [Company Name].
+
+Context:
+- Time zone: [time zone]
+- Team distribution: [describe where team members are located]
+- Tools used: [e.g., Slack, Zoom, Notion, Jira]
+- Team size: [number]
+
+Design:
+1. A pre-boarding checklist (1 week before start):
+   - Equipment shipping and setup instructions
+   - Account provisioning list
+   - Welcome package contents suggestion
+   - Pre-reading materials (keep light)
+
+2. Virtual first-week schedule with:
+   - No more than 4 hours of meetings per day
+   - Mix of 1:1s, small groups, and self-paced learning
+   - Virtual social activities (not forced fun)
+   - Clear async vs. sync expectations
+
+3. "Remote Culture" guide covering:
+   - Communication norms (response times, which channel for what)
+   - Meeting etiquette (cameras, muting, participation)
+   - How to show you're available/busy
+   - How to ask for help without feeling like a burden
+
+4. Connection plan: structured introductions to 15 people in first 3 weeks
+5. Warning signs checklist for managers: how to spot a struggling remote new hire`},
+  {stage:stages[2],title:"Onboarding Feedback Survey Creator",prompt:`You are an employee experience researcher. Design a comprehensive onboarding feedback survey for new hires at [Company Name] who have just completed their first [30/60/90] days.
+
+Context:
+- Survey tool: [e.g., Google Forms, SurveyMonkey, Culture Amp]
+- Anonymous: [yes/no]
+- Department or company-wide: [specify]
+
+Create:
+1. Welcome message explaining the survey's purpose and how feedback will be used
+2. Questions organized by theme (30 questions total, mix of formats):
+
+   PRE-BOARDING & DAY ONE (5 questions)
+   - Mix of rating scale and open-ended
+
+   MANAGER SUPPORT (5 questions)
+   - Frequency of check-ins, quality of guidance
+
+   TEAM INTEGRATION (5 questions)
+   - Sense of belonging, relationship building
+
+   ROLE CLARITY (5 questions)
+   - Understanding of expectations, goals, success criteria
+
+   TOOLS & RESOURCES (5 questions)
+   - Access, training, documentation quality
+
+   OVERALL EXPERIENCE (5 questions)
+   - eNPS question, open text for suggestions
+
+3. A scoring framework for analysing results
+4. Action planning template based on survey themes`},
+
+  // --- Performance Management ---
+  {stage:stages[3],title:"Performance Review Writer",prompt:`You are a performance management consultant. Help me write a comprehensive performance review for an employee.
+
+Employee details:
+- Name: [Name], Role: [Job Title]
+- Review period: [date range]
+- Tenure: [length of time in role]
+- Key goals from last review: [list 3-5 goals]
+
+Performance data:
+- Goal 1: [goal] — Result: [achieved/partially/not achieved + context]
+- Goal 2: [goal] — Result: [achieved/partially/not achieved + context]
+- Goal 3: [goal] — Result: [achieved/partially/not achieved + context]
+- Notable achievements: [list]
+- Areas of concern: [list, if any]
+- Peer/stakeholder feedback themes: [summarize]
+
+Write the review with:
+1. Opening summary (3-4 sentences capturing overall performance)
+2. Achievements & Impact section (tie results to business outcomes)
+3. Strengths (3, with specific evidence for each)
+4. Development areas (2-3, framed as growth opportunities with actionable suggestions)
+5. Goals for next period (3-5 SMART goals)
+6. Overall rating recommendation with justification
+
+Use specific, observable language. Avoid vague phrases like "good team player." Every statement should be backed by evidence.`},
+  {stage:stages[3],title:"Constructive Feedback Script",prompt:`You are an executive coach specialising in difficult conversations. Help me prepare to deliver constructive feedback to an employee.
+
+Situation:
+- Employee: [Name], Role: [Title]
+- The behaviour/issue: [describe specifically what happened]
+- Impact: [how it affected the team, project, or business]
+- How many times this has occurred: [frequency]
+- Previous conversations about this: [none / informal chat / formal warning]
+- Desired outcome: [what change you want to see]
+
+Create:
+1. An opening statement that is direct but respectful (2-3 sentences)
+2. The SBI framework version:
+   - Situation: When/where specifically
+   - Behaviour: What you observed (factual, not interpretive)
+   - Impact: The effect on others/the work
+3. A coaching question to invite their perspective
+4. 3 possible employee responses and how to handle each:
+   - Defensive response → your reply
+   - Accepting response → your reply
+   - Emotional response → your reply
+5. Action plan template: specific changes, support offered, check-in schedule
+6. Follow-up email template summarizing the conversation`},
+  {stage:stages[3],title:"Goal-Setting Workshop Facilitator",prompt:`You are an OKR and goal-setting expert. Help me facilitate a goal-setting session for my team.
+
+Team details:
+- Team: [Team Name], Size: [number]
+- Department goals this quarter/year: [list 2-3 department objectives]
+- Company strategic priorities: [list top 3]
+- Current challenges: [describe]
+
+Create:
+1. Pre-work for team members (send 3 days before):
+   - Reflection questions about last period
+   - Template for drafting individual goal proposals
+
+2. Workshop agenda (90 minutes):
+   - Review department objectives and how they connect to company strategy (15 min)
+   - Individual goal drafting with SMART criteria (20 min)
+   - Pair review and refinement (15 min)
+   - Group share and alignment check (30 min)
+   - Wrap-up and next steps (10 min)
+
+3. SMART goal template with:
+   - Specific: What exactly will be accomplished?
+   - Measurable: What metrics or evidence will show success?
+   - Achievable: What resources and support are needed?
+   - Relevant: How does this connect to team/company goals?
+   - Time-bound: What are the milestones and deadline?
+
+4. 5 example SMART goals for [function/department]
+5. Common goal-setting mistakes and how to avoid them (list of 6)
+6. Follow-up cadence recommendation for tracking progress`},
+  {stage:stages[3],title:"Continuous Feedback Framework",prompt:`You are an HR innovation consultant. Design a continuous feedback framework for [Company Name] to replace or complement annual reviews.
+
+Company context:
+- Size: [headcount]
+- Current review process: [describe]
+- Pain points with current system: [list]
+- Tools available: [e.g., Slack, Teams, HRIS name]
+
+Design a framework that includes:
+1. Feedback types and frequency:
+   - Real-time recognition (daily)
+   - Weekly 1:1 check-ins (template with 5 questions)
+   - Monthly pulse check (3-question survey)
+   - Quarterly development conversations (structured guide)
+
+2. For the weekly 1:1 template, include:
+   - 3 questions the employee prepares
+   - 2 questions the manager prepares
+   - A "growth moment" discussion prompt
+
+3. Manager training guide: how to give feedback that's:
+   - Specific (with examples)
+   - Timely (within 48 hours of the event)
+   - Balanced (recognition and development)
+   - Actionable (clear next steps)
+
+4. Peer feedback guidelines with sentence starters
+5. Implementation roadmap (12-week rollout plan)
+6. Success metrics: how to measure if the framework is working`},
+  {stage:stages[3],title:"PIP (Performance Improvement Plan) Drafter",prompt:`You are an employment law-aware HR advisor. Help me draft a Performance Improvement Plan for an employee.
+
+Employee details:
+- Name: [Name], Role: [Title], Tenure: [time]
+- Performance issues: [list specific, documented issues]
+- Previous feedback given: [dates and summary of prior conversations]
+- Business impact: [describe how performance gaps affect the team/company]
+- Manager: [Name]
+
+Draft a PIP document that includes:
+1. Clear statement of purpose (improvement-focused, not punitive framing)
+2. Specific performance gaps with evidence:
+   - Expected standard
+   - Current performance
+   - Gap description with concrete examples
+3. Improvement goals (3-4 SMART goals)
+4. Support and resources provided:
+   - Training, coaching, or mentoring offered
+   - Adjusted workload or responsibilities (if applicable)
+   - Regular check-in schedule
+5. Timeline: [30/60/90 days] with weekly milestones
+6. Measurement criteria: exactly how success will be assessed
+7. Consequences: clear statement of what happens if goals are/aren't met
+8. Employee acknowledgement section
+
+Use professional, supportive language throughout. This is a roadmap for success, not a paper trail for termination.`},
+
+  // --- Learning & Development ---
+  {stage:stages[4],title:"Individual Development Plan Creator",prompt:`You are a career development coach. Help me create an Individual Development Plan (IDP) for an employee.
+
+Employee details:
+- Name: [Name], Current Role: [Title]
+- Time in role: [duration]
+- Career aspiration: [where they want to go]
+- Current strengths: [list 3-4]
+- Development areas: [list 2-3]
+- Learning style preference: [visual/hands-on/reading/social]
+- Available budget: [amount or "limited"]
+
+Create an IDP with:
+1. Vision statement: Where the employee wants to be in 2-3 years (help them articulate it in 2-3 sentences)
+
+2. Skills gap analysis:
+   - Current role requirements vs. target role requirements
+   - Rate each skill: Strength / Adequate / Gap
+   - Prioritise the top 3 gaps to address
+
+3. Development actions for each priority gap:
+   - 70% on-the-job learning: specific projects, stretch assignments, or responsibilities
+   - 20% social learning: mentoring, shadowing, communities of practice
+   - 10% formal learning: courses, certifications, books
+
+4. 6-month milestone plan with monthly check-in topics
+5. Success measures for each development goal
+6. Manager support commitments (what the manager will do to enable growth)
+7. Potential blockers and mitigation strategies`},
+  {stage:stages[4],title:"Training Needs Analysis Prompt",prompt:`You are an L&D strategist. Conduct a training needs analysis for [Department/Team] at [Company Name].
+
+Context:
+- Department: [name], Size: [headcount]
+- Recent changes: [e.g., new tool adoption, restructure, strategy shift]
+- Business goals for next 12 months: [list 2-3]
+- Current skill concerns flagged by managers: [list]
+- Budget: [amount or range]
+
+Perform a three-level analysis:
+
+1. ORGANISATIONAL LEVEL:
+   - What business goals require new capabilities?
+   - What industry trends demand upskilling?
+   - What compliance training is required?
+
+2. TASK/ROLE LEVEL:
+   - For each key role, list critical skills and current proficiency (template)
+   - Identify the top 5 skill gaps across the department
+   - Prioritise by business impact (high/medium/low)
+
+3. INDIVIDUAL LEVEL:
+   - Self-assessment survey template (10 questions)
+   - Manager assessment comparison guide
+   - How to identify high-potential development investments
+
+4. Recommendations:
+   - Top 5 training priorities ranked by ROI
+   - Delivery method for each (workshop, e-learning, coaching, on-the-job)
+   - Timeline and budget allocation
+   - How to measure training effectiveness (Kirkpatrick model application)`},
+  {stage:stages[4],title:"Mentoring Programme Designer",prompt:`You are a mentoring programme expert. Design a formal mentoring programme for [Company Name].
+
+Context:
+- Programme goal: [e.g., develop future leaders, support underrepresented groups, cross-functional learning]
+- Target participants: [who will be mentees]
+- Programme duration: [e.g., 6 months, 12 months]
+- Expected cohort size: [number of pairs]
+
+Create:
+1. Programme overview and objectives (one-page summary)
+2. Mentor and mentee eligibility criteria
+3. Application process for both mentors and mentees
+4. Matching methodology (criteria and process)
+5. Programme structure:
+   - Kick-off session agenda
+   - Meeting frequency and format (monthly 1-hour minimum)
+   - Suggested topics for each month
+   - Mid-programme check-in design
+   - Graduation/closing celebration
+6. Mentor training outline (2-hour session):
+   - Active listening skills
+   - Asking powerful questions
+   - Giving guidance without directing
+   - Boundaries and confidentiality
+7. Mentee preparation guide
+8. Success metrics and evaluation plan
+9. Common challenges and how to address them
+10. Templates: mentoring agreement, meeting notes, feedback form`},
+  {stage:stages[4],title:"Leadership Development Programme Outline",prompt:`You are a leadership development consultant. Design a 6-month leadership development programme for emerging leaders at [Company Name].
+
+Context:
+- Target audience: [e.g., first-time managers, high-potential ICs moving to leadership]
+- Cohort size: [number]
+- Current leadership challenges: [list 2-3 org-wide leadership gaps]
+- Budget per participant: [amount]
+- Delivery preference: [in-person/virtual/hybrid]
+
+Design a programme with:
+1. Programme objectives and competency framework (6-8 leadership competencies)
+2. Monthly module outlines:
+   - Month 1: Self-Awareness & Leadership Identity
+   - Month 2: Communication & Influence
+   - Month 3: Building & Leading Teams
+   - Month 4: Coaching & Developing Others
+   - Month 5: Strategic Thinking & Decision-Making
+   - Month 6: Leading Change & Innovation
+
+For each module include:
+   - Learning objectives (3 per module)
+   - Workshop agenda (half-day format)
+   - Pre-work and post-work assignments
+   - Recommended reading or resources
+   - Practice exercise or real-world application
+
+3. Between-session activities: peer coaching triads, leadership journal prompts
+4. Capstone project brief
+5. Graduation criteria and assessment rubric
+6. ROI measurement plan`},
+  {stage:stages[4],title:"Skill-Based Career Pathway Mapper",prompt:`You are a career architecture consultant. Help me build a skill-based career pathway for the [Function/Department] at [Company Name].
+
+Context:
+- Function: [e.g., Marketing, Engineering, Finance]
+- Levels in current structure: [e.g., Analyst → Senior → Lead → Manager → Director]
+- Number of roles in function: [number]
+- Current pain point: [e.g., unclear progression, retention issues, title inflation]
+
+Create:
+1. Career pathway visualisation (text-based) showing:
+   - Individual contributor track (4-5 levels)
+   - Management track (3-4 levels)
+   - Where the tracks split and how to move between them
+
+2. For each level, define:
+   - Core competencies (5-6 per level)
+   - Scope of impact (individual → team → department → organisation)
+   - Decision-making authority
+   - Example deliverables or outcomes expected
+   - Typical time at level (range, not fixed)
+
+3. Transition criteria: what specifically someone must demonstrate to advance
+4. Skill assessment rubric (self-assessment + manager assessment format)
+5. Development resources mapped to each transition
+6. FAQ document for employees explaining the framework (10 questions)
+7. Manager guide for career conversations using this pathway`},
+
+  // --- Employee Relations ---
+  {stage:stages[5],title:"Difficult Conversation Preparation",prompt:`You are a workplace mediator and conflict resolution expert. Help me prepare for a difficult conversation with an employee.
+
+Situation:
+- Topic: [e.g., body odour, attitude problem, policy violation, interpersonal conflict]
+- Employee: [Name], Role: [Title], Tenure: [time]
+- Severity: [coaching moment / formal concern / serious issue]
+- Relationship context: [your relationship with this person]
+- Desired outcome: [what you want to happen after this conversation]
+
+Provide:
+1. Pre-conversation preparation:
+   - Check your assumptions: 3 questions to ask yourself first
+   - Gather facts: what documentation or evidence do you need?
+   - Choose the right setting and timing
+
+2. Conversation script:
+   - Opening: how to start without triggering defensiveness (2-3 sentence options)
+   - Describing the issue: factual, specific, non-judgmental language
+   - Listening: open-ended questions to understand their perspective
+   - Problem-solving: collaborative approach to finding solutions
+   - Closing: summarize agreements and next steps
+
+3. What NOT to say (5 phrases to avoid with alternatives)
+4. Self-regulation tips: how to stay calm if the conversation gets heated
+5. Follow-up action plan template
+6. When to involve HR, legal, or EAP`},
+  {stage:stages[5],title:"Workplace Investigation Question Set",prompt:`You are an experienced workplace investigator. Prepare an investigation question set for the following complaint.
+
+Complaint summary:
+- Nature of complaint: [e.g., harassment, bullying, discrimination, policy violation]
+- Complainant role: [Title]
+- Respondent role: [Title]
+- When the incident(s) occurred: [timeframe]
+- Witnesses identified: [number/roles]
+
+Create:
+1. COMPLAINANT INTERVIEW (15 questions):
+   - Opening and rapport-building
+   - Timeline and factual questions (who, what, when, where)
+   - Impact questions (how it affected them)
+   - Documentation questions (evidence they may have)
+   - Resolution questions (what outcome they seek)
+
+2. RESPONDENT INTERVIEW (15 questions):
+   - Opening with clear explanation of process and rights
+   - Response to specific allegations (one by one)
+   - Context and perspective questions
+   - Pattern questions (prior incidents)
+
+3. WITNESS INTERVIEW template (10 questions)
+
+4. Investigation process checklist:
+   - Confidentiality reminders
+   - Documentation requirements
+   - Timeline expectations
+   - Non-retaliation statement
+
+5. Common credibility assessment factors
+6. Report outline template`},
+  {stage:stages[5],title:"Employee Engagement Action Planner",prompt:`You are an employee engagement consultant. Help me create an action plan based on our recent engagement survey results.
+
+Survey results:
+- Overall engagement score: [score] (previous: [score])
+- Highest-scoring areas: [list top 3]
+- Lowest-scoring areas: [list bottom 3]
+- Biggest decline from last survey: [area and change]
+- Response rate: [percentage]
+- Department with lowest scores: [name]
+- Open-ended feedback themes: [list 3-5 common themes]
+
+Create:
+1. Executive summary of findings (5 bullet points, plain language)
+2. Root cause analysis for the bottom 3 areas:
+   - What might be driving low scores?
+   - What additional data would help confirm the cause?
+   - Quick wins vs. systemic changes needed
+
+3. 90-day action plan with:
+   - 3 quick wins (implement within 2 weeks)
+   - 3 medium-term initiatives (implement within 90 days)
+   - 2 long-term strategic changes (plan within 90 days, implement in 6-12 months)
+
+For each action:
+   - Owner (role, not name)
+   - Resources needed
+   - Success measure
+   - Communication plan
+
+4. Employee communication: message to share results and planned actions
+5. Pulse survey design to measure progress (5 questions, to deploy at 45 and 90 days)
+6. Manager toolkit: discussion guide for team-level action planning`},
+  {stage:stages[5],title:"Conflict Mediation Framework",prompt:`You are a certified workplace mediator. Design a mediation process for resolving an interpersonal conflict between two employees.
+
+Situation:
+- Party A: [Role], Party B: [Role]
+- Nature of conflict: [e.g., communication breakdown, competing priorities, perceived unfairness, personality clash]
+- Duration: [how long has this been ongoing]
+- Impact on team: [describe]
+- Previous attempts to resolve: [describe]
+- Severity: [mild tension / active conflict / affecting team performance]
+
+Create:
+1. Assessment: is this conflict suitable for mediation? (checklist of 5 criteria)
+2. Pre-mediation process:
+   - Individual meetings with each party (agenda and key questions)
+   - Ground rules document for both parties to agree to
+   - Setting expectations about the process and possible outcomes
+
+3. Mediation session structure (90 minutes):
+   - Opening statement from mediator
+   - Each party's opening statement (uninterrupted, 5 min each)
+   - Guided discussion phase
+   - Problem identification
+   - Option generation
+   - Agreement drafting
+
+4. Agreement template with:
+   - Specific behaviours each party commits to
+   - Communication protocols going forward
+   - Check-in schedule
+   - What happens if the agreement breaks down
+
+5. Post-mediation follow-up plan (30, 60, 90 days)
+6. When to escalate beyond mediation`},
+  {stage:stages[5],title:"Mental Health & Wellbeing Check-In Guide",prompt:`You are a workplace wellbeing specialist. Create a manager's guide for conducting mental health and wellbeing check-ins with team members.
+
+Context:
+- Organisation: [Company Name]
+- Current situation: [e.g., post-layoffs, busy season, remote work fatigue, return-to-office transition]
+- EAP available: [yes/no, if yes, contact details placeholder]
+- Team size: [number]
+
+Create:
+1. Guide introduction: why these conversations matter (stats and context, 3 paragraphs)
+
+2. Preparation:
+   - 5 signs an employee may be struggling
+   - How to create psychological safety before the conversation
+   - What this conversation is and is NOT (manager vs. therapist)
+
+3. Conversation framework:
+   - 3 warm opening questions (non-intrusive)
+   - 5 deeper check-in questions if they signal something is wrong
+   - Active listening techniques specific to wellbeing conversations
+   - How to respond to disclosures (do's and don'ts)
+
+4. Resource toolkit:
+   - When and how to refer to EAP
+   - Reasonable adjustments you can offer as a manager
+   - Emergency response protocol (if someone is in crisis)
+
+5. Self-care for managers: recognising your own limits
+6. Follow-up cadence and documentation guidance (what to record, what not to)
+7. Quick-reference wallet card with key phrases and resources`},
+
+  // --- Offboarding & Exit ---
+  {stage:stages[6],title:"Exit Interview Question Set",prompt:`You are an HR analytics specialist focused on retention. Design a comprehensive exit interview process for [Company Name].
+
+Context:
+- Average voluntary turnover: [percentage]
+- Roles with highest turnover: [list]
+- Current exit interview process: [describe or "none"]
+- Who conducts exits: [HR / manager / skip-level / third party]
+
+Create:
+1. Process design:
+   - When to schedule the exit interview (timing relative to last day)
+   - Who should conduct it and why
+   - Format: in-person, video, or survey (recommendation with pros/cons)
+   - Confidentiality statement to share at the start
+
+2. Exit interview questions (20 questions, grouped by theme):
+   ROLE & WORK (5 questions):
+   - Satisfaction with role, workload, and growth opportunities
+
+   MANAGEMENT (4 questions):
+   - Relationship with manager, feedback quality, support received
+
+   CULTURE & ENVIRONMENT (4 questions):
+   - Inclusion, team dynamics, company values in practice
+
+   COMPENSATION & BENEFITS (3 questions):
+   - Competitiveness, equity, valued benefits
+
+   REASON FOR LEAVING (4 questions):
+   - Push vs. pull factors, what could have changed their mind
+
+3. Quantitative rating scales for benchmarking
+4. Analysis framework: how to aggregate and report exit data quarterly
+5. Template for presenting exit trends to leadership (executive summary format)
+6. Retention risk indicators derived from exit data patterns`},
+  {stage:stages[6],title:"Knowledge Transfer Plan",prompt:`You are a knowledge management specialist. Create a knowledge transfer plan for a departing employee.
+
+Context:
+- Departing employee role: [Title]
+- Notice period remaining: [duration]
+- Critical knowledge areas: [list what they know that others don't]
+- Successor identified: [yes/no, if yes, their role]
+- Team impact: [how dependent is the team on this person]
+
+Create:
+1. Knowledge audit checklist:
+   - Systems and tools they administer or are sole users of
+   - Key relationships (internal stakeholders, external vendors/clients)
+   - Recurring tasks and their schedules
+   - Undocumented processes or workarounds
+   - Passwords, access credentials, and licence information
+   - In-progress projects and their status
+
+2. Transfer timeline (week-by-week for [notice period]):
+   - Week 1: Knowledge audit and documentation sprint
+   - Week 2: Shadow sessions with successor/team
+   - Week 3: Supervised handover of responsibilities
+   - Final week: Final documentation review, access transfer, farewell
+
+3. Documentation templates:
+   - Process documentation template (step-by-step)
+   - Stakeholder relationship map
+   - "If things go wrong" troubleshooting guide
+   - FAQ from the departing employee's perspective
+
+4. Meeting schedule: who they need to introduce the successor to
+5. Risk assessment: what knowledge might be lost and contingency plans
+6. Post-departure contact agreement (if appropriate)`},
+  {stage:stages[6],title:"Offboarding Checklist & Process",prompt:`You are an HR operations specialist. Create a comprehensive offboarding checklist for [Company Name].
+
+Context:
+- Company size: [headcount]
+- Departure type: [voluntary resignation / involuntary termination / retirement / end of contract]
+- Industry: [industry]
+- Remote employees: [yes/no]
+- Key systems: [list main tools/platforms]
+
+Create a checklist organized by:
+
+1. IMMEDIATE (within 24 hours of resignation/notification):
+   - Manager actions (5 items)
+   - HR actions (5 items)
+   - IT security actions (3 items)
+
+2. DURING NOTICE PERIOD:
+   - Knowledge transfer tasks (5 items)
+   - Project reassignment (3 items)
+   - Communication plan: who to inform and when
+   - Client/stakeholder transition (if applicable)
+
+3. FINAL WEEK:
+   - Exit interview scheduling
+   - Benefits and final pay communication
+   - Equipment return process
+   - Access revocation schedule (list systems)
+   - References and recommendation discussion
+
+4. LAST DAY:
+   - Final system access removal checklist
+   - Company property return (itemized list)
+   - Farewell communication (email template)
+   - Alumni network invitation
+
+5. POST-DEPARTURE (within 30 days):
+   - Final paycheck and benefits documentation
+   - COBRA/continuation coverage notification
+   - Reference policy reminder to team
+   - Backfill decision and timeline
+
+Include RACI matrix showing who is Responsible, Accountable, Consulted, Informed for each section.`},
+  {stage:stages[6],title:"Alumni Network Programme Designer",prompt:`You are an employer brand and talent strategy consultant. Design an alumni network programme for [Company Name].
+
+Context:
+- Company size: [headcount]
+- Annual turnover: [number of departures per year]
+- Industry: [industry]
+- Current alumni engagement: [none / informal / formal programme]
+- Goals: [e.g., rehiring, referrals, brand advocacy, knowledge sharing]
+
+Create:
+1. Programme vision and value proposition:
+   - Benefits for alumni (3-5 bullet points)
+   - Benefits for the company (3-5 bullet points)
+   - Programme name suggestions (3 creative options)
+
+2. Platform recommendation:
+   - Compare 3 options (LinkedIn group, dedicated platform, internal portal)
+   - Recommended choice with rationale
+
+3. Content strategy:
+   - Monthly content calendar (first 6 months)
+   - Content types: company updates, job openings, alumni spotlights, events
+   - Engagement activities: quarterly virtual meetups, annual event, mentoring
+
+4. Launch plan:
+   - Pilot group selection (who to invite first)
+   - Launch announcement (email template)
+   - First 90 days activity plan
+
+5. Policies:
+   - Who qualifies (tenure minimums, departure reason criteria)
+   - Code of conduct for the community
+   - Rehire fast-track process
+
+6. Success metrics and quarterly reporting template
+7. Budget estimate breakdown`},
+  {stage:stages[6],title:"Layoff Communication Drafter",prompt:`You are a crisis communication and HR specialist. Help me draft layoff communications for [Company Name].
+
+Context:
+- Number of affected employees: [number]
+- Reason for layoffs: [e.g., restructuring, economic conditions, merger]
+- Departments affected: [list]
+- Severance offered: [describe package]
+- Timeline: [when notifications will occur]
+- Outplacement support: [yes/no, details]
+
+Draft these communications:
+
+1. NOTIFICATION SCRIPT for managers delivering the news (1:1 meeting):
+   - What to say (scripted opening, key points, and close)
+   - What NOT to say
+   - How to handle emotional reactions
+   - Logistics to cover (last day, severance, benefits continuation)
+   - Maximum 10 minutes, compassionate and clear
+
+2. AFFECTED EMPLOYEE EMAIL (sent after the meeting):
+   - Recap of what was discussed
+   - Next steps with dates
+   - Support resources and contacts
+   - FAQ attachment outline
+
+3. REMAINING TEAM COMMUNICATION (from department leader):
+   - Acknowledge the difficulty honestly
+   - Explain the "why" at appropriate level
+   - Address survivor concerns
+   - Commitment to transparency going forward
+
+4. COMPANY-WIDE ANNOUNCEMENT (from CEO/leadership):
+   - For internal distribution and potential external leak preparedness
+   - Ownership and accountability in tone
+   - Forward-looking but not dismissive of impact
+
+5. EXTERNAL STATEMENT (if needed, for press or social media)
+6. Manager FAQ: 15 questions managers will get and scripted answers`},
+
+  // --- HR Communications & Policies ---
+  {stage:stages[7],title:"HR Policy Drafter",prompt:`You are an HR policy specialist with employment law awareness. Draft a comprehensive policy for [Policy Topic] at [Company Name].
+
+Context:
+- Company size: [headcount], Industry: [industry]
+- Jurisdiction: [country/state for legal context]
+- Current state: [no existing policy / updating outdated policy]
+- Company culture: [formal / casual / hybrid]
+- Key stakeholders: [who needs to approve this]
+
+Draft a policy that includes:
+1. Policy header:
+   - Policy title, effective date, version, owner, approval authority
+
+2. Purpose and scope:
+   - Why this policy exists (2-3 sentences)
+   - Who it applies to
+
+3. Definitions:
+   - Key terms defined in plain language
+
+4. Policy statement:
+   - Core principles (numbered)
+   - Detailed guidelines organized by sub-topic
+   - Employee responsibilities
+   - Manager responsibilities
+   - HR responsibilities
+
+5. Procedures:
+   - Step-by-step process for common scenarios
+   - Escalation path
+
+6. Exceptions and accommodations process
+
+7. Compliance and consequences:
+   - What happens when the policy is violated
+   - Progressive discipline reference
+
+8. Related policies and resources
+9. Revision history table
+10. Acknowledgement form template
+
+Use clear, plain language. Avoid legal jargon where possible while maintaining enforceability. Include [PLACEHOLDER] tags where legal review is needed.`},
+  {stage:stages[7],title:"All-Hands Meeting Content Creator",prompt:`You are an internal communications strategist. Help me create content for an upcoming all-hands meeting at [Company Name].
+
+Meeting details:
+- Audience: [full company / department / leadership + ICs]
+- Format: [in-person / virtual / hybrid]
+- Duration: [e.g., 60 minutes]
+- Key topics to cover: [list 3-5 topics]
+- Sensitive topics to address: [if any]
+- Tone goal: [e.g., energising, transparent, reassuring]
+
+Create:
+1. Meeting agenda with time allocations:
+   - Opening and energy-setter (5 min)
+   - Each topic with allocated time
+   - Q&A session design (live questions, anonymous submissions, or both)
+   - Closing and call to action (5 min)
+
+2. Opening remarks script (2 minutes, sets the tone)
+
+3. For each key topic, provide:
+   - Key messages (3 bullet points max)
+   - Suggested visual/slide description
+   - Transition line to next topic
+
+4. Q&A preparation:
+   - 10 likely questions employees will ask
+   - Suggested responses for each (honest, specific, not corporate-speak)
+   - How to handle a question you can't answer yet
+
+5. Follow-up communication email template (send within 24 hours):
+   - Summary of key announcements
+   - Links to relevant resources
+   - Recording/slides location
+   - Feedback survey (3 questions)
+
+6. Engagement tips: 3 interactive elements to keep the audience engaged`},
+  {stage:stages[7],title:"Change Management Communication Plan",prompt:`You are a change management specialist (PROSCI/ADKAR framework). Create a communication plan for an upcoming organisational change.
+
+Change details:
+- What is changing: [describe the change]
+- Why: [business drivers]
+- Who is affected: [groups and how]
+- Timeline: [key dates]
+- Expected resistance points: [list anticipated concerns]
+- Executive sponsor: [title]
+- Change champions identified: [yes/no]
+
+Create a communication plan with:
+1. Stakeholder analysis matrix:
+   - Group | Impact Level | Current Awareness | Desired State | Key Concerns | Preferred Channel
+
+2. ADKAR-based message framework:
+   - Awareness: Why we need to change (key messages)
+   - Desire: What's in it for each stakeholder group
+   - Knowledge: What people need to learn
+   - Ability: How we'll support the transition
+   - Reinforcement: How we'll sustain the change
+
+3. Communication timeline (table format):
+   - Date | Audience | Message | Channel | Owner | Feedback Mechanism
+
+4. Communication templates:
+   - Announcement email from exec sponsor
+   - Manager talking points for team meetings
+   - FAQ document (15 questions)
+   - Intranet/Slack announcement
+   - Weekly update template (for duration of change)
+
+5. Resistance management:
+   - For each anticipated concern, provide a messaging response
+   - Escalation process for unresolved concerns
+
+6. Measurement: how to track communication effectiveness (5 metrics)`},
+  {stage:stages[7],title:"Employee Handbook Section Writer",prompt:`You are a technical writer specialising in HR documentation. Write a section for the employee handbook on [Topic].
+
+Context:
+- Company: [Company Name]
+- Company voice: [professional / friendly / startup-casual]
+- Jurisdiction: [country/state]
+- Existing handbook: [new handbook / adding to existing]
+- Topic: [e.g., PTO policy, remote work policy, code of conduct, expenses policy]
+
+Write the section including:
+1. Section title and introduction (welcoming, clear)
+2. Policy overview in plain language (no legalese)
+3. Eligibility and coverage
+4. Detailed guidelines with:
+   - Do's and Don'ts presented positively
+   - Real-world examples of how the policy works in practice
+   - Common scenarios with clear guidance
+5. Process and procedures (step-by-step, numbered)
+6. Manager and employee responsibilities
+7. Frequently asked questions (8-10 relevant questions)
+8. Where to go for help (contacts and resources)
+
+Style requirements:
+- Write in second person ("you")
+- Use short paragraphs (3 sentences max)
+- Include headers and subheaders for scannability
+- Tone should be [specified tone] while maintaining clarity
+- Avoid passive voice
+- Include [LEGAL REVIEW] tags where jurisdiction-specific legal review is needed`},
+  {stage:stages[7],title:"DEI Initiative Communication Pack",prompt:`You are a DEI communications specialist. Create a communication pack for launching a new DEI initiative at [Company Name].
+
+Initiative details:
+- Initiative: [describe, e.g., ERG programme, inclusive hiring pledge, pay equity audit, unconscious bias training]
+- Why now: [catalyst or strategic reason]
+- Scope: [company-wide / specific groups]
+- Executive sponsor: [title]
+- Budget allocated: [yes/no]
+- Timeline: [launch date and key milestones]
+
+Create:
+1. Internal launch announcement:
+   - Email from executive sponsor (authentic, not performative, under 300 words)
+   - Why this matters to the business AND to people
+   - Specific commitments and accountability measures
+   - How employees can participate
+
+2. Manager briefing document:
+   - Key messages and talking points
+   - Anticipated questions and answers (10 Q&As)
+   - Their role in supporting the initiative
+   - What NOT to say (common missteps)
+
+3. Employee FAQ:
+   - What is this initiative?
+   - Why are we doing this?
+   - How will success be measured?
+   - How can I get involved?
+   - What if I have concerns about the approach?
+   - 5 additional relevant questions
+
+4. Social media / external communication (if applicable):
+   - LinkedIn post (under 200 words, genuine not virtue-signalling)
+   - Key principles: show action not intention, be specific, acknowledge the journey
+
+5. 6-month communication cadence with milestones
+6. Feedback mechanism design: how employees can share input safely`}
+];
+
+/* Render library */
+function renderLibrary(){
+  const filtersEl=document.getElementById('lib-filters');
+  filtersEl.innerHTML='<button class="filter-pill active" onclick="setFilter(\'all\',this)">All</button>'+stages.map(s=>`<button class="filter-pill" onclick="setFilter('${s}',this)">${s}</button>`).join('');
+  filterLibrary();
+}
+let activeFilter='all';
+function setFilter(stage,el){
+  activeFilter=stage;
+  document.querySelectorAll('#lib-filters .filter-pill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  filterLibrary();
+}
+function filterLibrary(){
+  const q=document.getElementById('lib-search').value.toLowerCase();
+  const grid=document.getElementById('lib-grid');
+  const filtered=prompts.filter(p=>{
+    const matchStage=activeFilter==='all'||p.stage===activeFilter;
+    const matchSearch=!q||p.title.toLowerCase().includes(q)||p.prompt.toLowerCase().includes(q)||p.stage.toLowerCase().includes(q);
+    return matchStage&&matchSearch;
+  });
+  document.getElementById('lib-no-results').style.display=filtered.length?'none':'block';
+  grid.innerHTML=filtered.map((p,i)=>`
+    <div class="card">
+      <span class="badge">${p.stage}</span>
+      <div class="card-title">${p.title}</div>
+      <div class="card-prompt" id="prompt-${i}">${escHtml(p.prompt)}</div>
+      <div class="card-actions">
+        <button class="btn btn-primary btn-sm" onclick="copyText(prompts[${prompts.indexOf(p)}].prompt)">Copy</button>
+        <button class="expand-btn" onclick="toggleExpand(${i},this)">Show more</button>
+      </div>
+    </div>`).join('');
+}
+function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function toggleExpand(i,btn){
+  const el=document.getElementById('prompt-'+i);
+  el.classList.toggle('expanded');
+  btn.textContent=el.classList.contains('expanded')?'Show less':'Show more';
+}
+
+/* ========== TOOL 2: BUILDER ========== */
+const builderExamples=[
+  {name:"Job Description",role:"You are a talent acquisition specialist with 10 years of experience writing inclusive job descriptions",task:"Write a job description for a Senior Product Manager at a fintech startup",context:"The company is a Series B fintech startup with 120 employees. The role is hybrid (3 days in office in London). The team currently has 4 product managers.",format:"Use clear sections: About Us, The Role, What You'll Do (bullet points), What You Bring (must-haves vs nice-to-haves), What We Offer. Keep under 600 words.",examples:"",tone:"Professional but approachable. Avoid corporate jargon."},
+  {name:"Performance Feedback",role:"You are an executive coach who specialises in delivering constructive feedback",task:"Help me write performance review feedback for a software engineer who exceeds expectations on technical work but needs to improve on cross-team communication",context:"This is for our annual performance review. The engineer has been in the role for 2 years, recently promoted. Their manager has received feedback from 3 stakeholders about communication gaps on a recent cross-team project.",format:"Structure as: Summary (3 sentences), Strengths (3 bullet points with evidence), Development Areas (2 bullet points with specific examples and suggestions), Goals for Next Quarter (3 SMART goals)",examples:"",tone:"Direct but supportive. Growth-oriented, not punitive."},
+  {name:"Interview Questions",role:"You are an industrial-organisational psychologist specialising in structured interviewing",task:"Generate behavioural interview questions for a Marketing Director role, focusing on strategic thinking and team leadership",context:"The company is a DTC e-commerce brand scaling from 50 to 150 employees. The Marketing Director will build and lead a team of 8 across brand, growth, and content. This is a new role.",format:"For each competency: 2 behavioural questions, 1 situational question, scoring rubric (1-5 scale with anchors for 1, 3, and 5), and 1 follow-up probe per question",examples:"",tone:"Neutral and professional. Questions should be open-ended and non-leading."},
+  {name:"Policy Draft",role:"You are an HR policy specialist with knowledge of UK employment law",task:"Draft a flexible working policy for our company",context:"UK-based tech company with 200 employees. Currently 3 days in office, 2 remote. Employees have been requesting more flexibility. Leadership wants to maintain collaboration while accommodating individual needs.",format:"Policy format: Purpose, Scope, Definitions, Policy Statement, Eligibility, Request Process, Manager Guidelines, Monitoring & Review. Include an FAQ section.",examples:"",tone:"Clear and straightforward. Friendly but authoritative. Write in second person."},
+  {name:"Training Plan",role:"You are a learning and development specialist with expertise in adult learning principles",task:"Create a 3-month onboarding training plan for new customer success managers",context:"SaaS company selling B2B HR software. New CSMs need to learn the product, our customer segments, success methodologies, and internal tools. Current ramp time is 6 months and we want to reduce it to 3.",format:"Week-by-week table with columns: Week, Topic, Learning Method (e.g., e-learning, shadowing, hands-on), Deliverable/Assessment, Owner. Include a 30/60/90 day milestone checklist.",examples:"",tone:"Encouraging and practical. Focus on building confidence."}
+];
+
+function renderBuilderExamples(){
+  document.getElementById('builder-examples').innerHTML='<span style="font-size:13px;color:var(--gray-500);font-weight:500">Try an example:</span>'+builderExamples.map((e,i)=>`<button class="filter-pill" onclick="loadBuilderExample(${i})">${e.name}</button>`).join('');
+}
+function loadBuilderExample(i){
+  const e=builderExamples[i];
+  document.getElementById('b-role').value=e.role;
+  document.getElementById('b-task').value=e.task;
+  document.getElementById('b-context').value=e.context;
+  document.getElementById('b-format').value=e.format;
+  document.getElementById('b-examples').value=e.examples;
+  document.getElementById('b-tone').value=e.tone;
+  updateBuilder();
+}
+function clearBuilder(){
+  ['b-role','b-task','b-context','b-format','b-examples','b-tone'].forEach(id=>document.getElementById(id).value='');
+  updateBuilder();
+}
+function updateBuilder(){
+  const fields={
+    role:document.getElementById('b-role').value.trim(),
+    task:document.getElementById('b-task').value.trim(),
+    context:document.getElementById('b-context').value.trim(),
+    format:document.getElementById('b-format').value.trim(),
+    examples:document.getElementById('b-examples').value.trim(),
+    tone:document.getElementById('b-tone').value.trim()
+  };
+  // Build preview
+  let parts=[];
+  if(fields.role) parts.push(fields.role+'.');
+  if(fields.task) parts.push('\n\nTask: '+fields.task);
+  if(fields.context) parts.push('\n\nContext: '+fields.context);
+  if(fields.format) parts.push('\n\nFormat: '+fields.format);
+  if(fields.examples) parts.push('\n\nExamples:\n'+fields.examples);
+  if(fields.tone) parts.push('\n\nTone: '+fields.tone);
+  const preview=document.getElementById('b-preview');
+  preview.textContent=parts.length?parts.join(''):'Your prompt will appear here as you type...';
+
+  // Score
+  const filled=Object.values(fields).filter(v=>v.length>0).length;
+  const score=Math.round((filled/6)*10);
+  const circle=document.getElementById('b-score-circle');
+  circle.textContent=score;
+  if(score<=3) circle.style.background='#ef4444';
+  else if(score<=6) circle.style.background='#f59e0b';
+  else if(score<=8) circle.style.background='#3b82f6';
+  else circle.style.background='#22c55e';
+
+  // Feedback
+  const missing=[];
+  if(!fields.role) missing.push('Role — tells the AI what persona and expertise to adopt');
+  if(!fields.task) missing.push('Task — the specific action you want the AI to perform');
+  if(!fields.context) missing.push('Context — background information that shapes a better response');
+  if(!fields.format) missing.push('Format — how the output should be structured');
+  if(!fields.examples) missing.push('Examples — reference outputs that guide quality and style');
+  if(!fields.tone) missing.push('Tone — the voice and style for the response');
+  const fb=document.getElementById('b-feedback');
+  if(missing.length===0) fb.innerHTML='<strong style="color:#22c55e">Excellent!</strong> Your prompt has all key ingredients for a high-quality AI response.';
+  else if(missing.length<=2) fb.innerHTML='<strong style="color:#3b82f6">Good prompt!</strong> Consider adding:<br>• '+missing.join('<br>• ');
+  else fb.innerHTML='<strong>Missing ingredients:</strong><br>• '+missing.join('<br>• ');
+}
+
+/* ========== TOOL 3: FRAMEWORK ========== */
+const frameworks=[
+  {id:'jd',icon:'📋',name:'Job Description',goal:'Create a compelling, inclusive job posting that attracts qualified candidates',
+   fields:[
+     {label:'Job Title',key:'title',type:'text',placeholder:'e.g. Senior Product Manager'},
+     {label:'Department',key:'dept',type:'text',placeholder:'e.g. Product'},
+     {label:'Company Name & Industry',key:'company',type:'text',placeholder:'e.g. Acme Corp, fintech'},
+     {label:'Location / Work Arrangement',key:'location',type:'text',placeholder:'e.g. London, hybrid 3 days/week'},
+     {label:'Key Responsibilities (3-5)',key:'responsibilities',type:'textarea',placeholder:'e.g. Own the product roadmap for the payments platform...'},
+     {label:'Must-Have Qualifications (max 5)',key:'musthave',type:'textarea',placeholder:'e.g. 5+ years product management experience in B2B SaaS'},
+     {label:'Nice-to-Have Qualifications',key:'nicetohave',type:'textarea',placeholder:'e.g. Experience with payment systems'},
+     {label:'Salary Range & Key Benefits',key:'comp',type:'text',placeholder:'e.g. £80-100K, equity, 25 days PTO'},
+     {label:'Company Culture / Values',key:'culture',type:'text',placeholder:'e.g. collaborative, move fast, customer-obsessed'},
+     {label:'Tone',key:'tone',type:'text',placeholder:'e.g. professional but approachable'}
+   ],
+   template:(f)=>`You are a talent acquisition specialist with expertise in writing inclusive, high-converting job descriptions.
+
+Write a job description for the role of ${f.title||'[Job Title]'} in the ${f.dept||'[Department]'} team at ${f.company||'[Company]'}.
+
+Location/arrangement: ${f.location||'[Location]'}
+
+Key responsibilities:
+${f.responsibilities||'[List 3-5 key responsibilities]'}
+
+Must-have qualifications (limit to 5):
+${f.musthave||'[Must-have qualifications]'}
+
+Nice-to-have qualifications:
+${f.nicetohave||'[Nice-to-have qualifications]'}
+
+Compensation & benefits: ${f.comp||'[Salary range and key benefits]'}
+Company culture: ${f.culture||'[Culture keywords]'}
+
+Structure the job description with these sections:
+1. An engaging opening paragraph (avoid gendered language, no jargon)
+2. About the company (2-3 sentences)
+3. What you'll do (bullet points, focus on impact)
+4. What you bring (must-haves separate from nice-to-haves)
+5. What we offer
+6. Our commitment to inclusion
+
+Use "you/your" language. Aim for a reading level accessible to all candidates. Keep under 600 words.
+Tone: ${f.tone||'professional but approachable'}.`},
+
+  {id:'perf',icon:'📊',name:'Performance Review',goal:'Write a fair, evidence-based performance review that motivates growth',
+   fields:[
+     {label:'Employee Name & Role',key:'employee',type:'text',placeholder:'e.g. Jane Smith, Senior Designer'},
+     {label:'Review Period',key:'period',type:'text',placeholder:'e.g. Jan 2025 - Dec 2025'},
+     {label:'Key Goals & Results',key:'goals',type:'textarea',placeholder:'Goal 1: Redesign checkout flow — Achieved, 15% conversion lift\nGoal 2: ...'},
+     {label:'Notable Achievements',key:'achievements',type:'textarea',placeholder:'e.g. Led the design system overhaul ahead of schedule'},
+     {label:'Areas for Improvement',key:'improvements',type:'textarea',placeholder:'e.g. Stakeholder communication during cross-functional projects'},
+     {label:'Peer/Stakeholder Feedback Themes',key:'feedback',type:'textarea',placeholder:'e.g. Strong collaborator, could be more proactive in sharing updates'},
+     {label:'Desired Overall Rating',key:'rating',type:'text',placeholder:'e.g. Exceeds Expectations'},
+     {label:'Tone',key:'tone',type:'text',placeholder:'e.g. direct but supportive, growth-oriented'}
+   ],
+   template:(f)=>`You are a performance management consultant who writes evidence-based, motivating reviews.
+
+Write a comprehensive performance review for ${f.employee||'[Employee Name, Role]'} for the period ${f.period||'[Review Period]'}.
+
+Goals and results:
+${f.goals||'[List goals and outcomes]'}
+
+Notable achievements:
+${f.achievements||'[List achievements]'}
+
+Areas for improvement:
+${f.improvements||'[List improvement areas]'}
+
+Peer/stakeholder feedback themes:
+${f.feedback||'[Summarize feedback]'}
+
+Desired overall rating: ${f.rating||'[Rating]'}
+
+Structure the review as:
+1. Opening summary (3-4 sentences capturing overall performance)
+2. Achievements & Impact (tie results to business outcomes)
+3. Strengths (3 strengths, with specific evidence for each)
+4. Development Areas (2-3, framed as growth opportunities with actionable suggestions)
+5. Goals for Next Period (3-5 SMART goals)
+6. Overall Rating with justification
+
+Use specific, observable language. Every statement must be backed by evidence. Avoid vague phrases like "great team player."
+Tone: ${f.tone||'direct but supportive, growth-oriented'}.`},
+
+  {id:'diff',icon:'💬',name:'Difficult Conversation',goal:'Prepare for a challenging employee conversation with confidence and empathy',
+   fields:[
+     {label:'Topic of Conversation',key:'topic',type:'text',placeholder:'e.g. consistent lateness, performance gap, interpersonal conflict'},
+     {label:'Employee Name & Role',key:'employee',type:'text',placeholder:'e.g. Alex Chen, Account Manager'},
+     {label:'Specific Behaviour or Issue',key:'behaviour',type:'textarea',placeholder:'e.g. Missed 3 client deadlines in the past month without flagging risks in advance'},
+     {label:'Impact on Team/Business',key:'impact',type:'textarea',placeholder:'e.g. Client escalated to VP, team had to work overtime to recover'},
+     {label:'Previous Conversations About This',key:'previous',type:'text',placeholder:'e.g. informal chat 2 weeks ago, no formal documentation'},
+     {label:'Desired Outcome',key:'outcome',type:'text',placeholder:'e.g. employee commits to flagging risks 48 hours before deadlines'},
+     {label:'Your Relationship Context',key:'relationship',type:'text',placeholder:'e.g. direct report for 8 months, generally positive relationship'},
+     {label:'Severity Level',key:'severity',type:'text',placeholder:'e.g. coaching moment / formal concern / serious issue'}
+   ],
+   template:(f)=>`You are an executive coach specialising in difficult workplace conversations.
+
+Help me prepare for a difficult conversation about: ${f.topic||'[Topic]'}
+
+Employee: ${f.employee||'[Name, Role]'}
+Specific behaviour/issue: ${f.behaviour||'[Describe the specific behaviour]'}
+Impact: ${f.impact||'[How it affected the team/business]'}
+Previous conversations: ${f.previous||'[Prior discussions about this]'}
+Desired outcome: ${f.outcome||'[What change you want]'}
+Relationship context: ${f.relationship||'[Your relationship]'}
+Severity: ${f.severity||'[Level]'}
+
+Provide:
+1. Pre-conversation prep: 3 assumptions to check, evidence to gather, setting/timing advice
+2. Conversation script using the SBI model:
+   - Opening statement (direct but respectful, 2-3 sentences)
+   - Situation: when and where
+   - Behaviour: what you observed (factual)
+   - Impact: the effect on others/work
+3. A coaching question to invite their perspective
+4. How to handle 3 possible responses: defensive, accepting, emotional
+5. Action plan template: specific changes, support offered, check-in schedule
+6. Follow-up email template summarizing the conversation
+7. What NOT to say (5 phrases to avoid with better alternatives)`},
+
+  {id:'policy',icon:'📑',name:'Policy Drafting',goal:'Create a clear, comprehensive policy document ready for legal review',
+   fields:[
+     {label:'Policy Topic',key:'topic',type:'text',placeholder:'e.g. Remote Work Policy, Anti-Harassment Policy'},
+     {label:'Company Name & Size',key:'company',type:'text',placeholder:'e.g. TechCo, 200 employees'},
+     {label:'Industry & Jurisdiction',key:'jurisdiction',type:'text',placeholder:'e.g. Technology, United Kingdom'},
+     {label:'Key Points to Cover',key:'points',type:'textarea',placeholder:'e.g. eligibility criteria, request process, manager approval, equipment provision'},
+     {label:'Company Culture/Tone',key:'culture',type:'text',placeholder:'e.g. casual startup culture, approachable language'},
+     {label:'Specific Requirements or Constraints',key:'constraints',type:'textarea',placeholder:'e.g. must comply with GDPR, must include accommodation process'}
+   ],
+   template:(f)=>`You are an HR policy specialist with employment law awareness.
+
+Draft a ${f.topic||'[Policy Topic]'} for ${f.company||'[Company Name, Size]'}.
+
+Industry & jurisdiction: ${f.jurisdiction||'[Industry, Jurisdiction]'}
+
+Key points to address:
+${f.points||'[Key points to cover]'}
+
+Constraints: ${f.constraints||'[Specific requirements]'}
+
+Include these sections:
+1. Policy header (title, effective date, version, owner)
+2. Purpose and scope (who it applies to)
+3. Definitions (key terms in plain language)
+4. Policy statement (core principles, detailed guidelines)
+5. Procedures (step-by-step for common scenarios)
+6. Employee, manager, and HR responsibilities
+7. Exceptions and accommodations process
+8. Compliance and consequences
+9. FAQ section (8-10 questions)
+10. Acknowledgement form template
+
+Use clear, plain language. Include [LEGAL REVIEW] tags where jurisdiction-specific review is needed.
+Company tone: ${f.culture||'professional but approachable'}.`},
+
+  {id:'training',icon:'🎓',name:'Training Plan',goal:'Design a structured learning programme with clear milestones and outcomes',
+   fields:[
+     {label:'Training Programme Name',key:'name',type:'text',placeholder:'e.g. New Manager Bootcamp'},
+     {label:'Target Audience',key:'audience',type:'text',placeholder:'e.g. first-time managers promoted in Q1'},
+     {label:'Number of Participants',key:'size',type:'text',placeholder:'e.g. 12'},
+     {label:'Duration',key:'duration',type:'text',placeholder:'e.g. 6 weeks, half-day sessions'},
+     {label:'Skills/Topics to Cover',key:'topics',type:'textarea',placeholder:'e.g. delegation, giving feedback, running 1:1s, performance management basics'},
+     {label:'Available Budget & Resources',key:'budget',type:'text',placeholder:'e.g. £500/person, internal trainers available'},
+     {label:'Delivery Format',key:'format',type:'text',placeholder:'e.g. virtual workshops + async exercises'},
+     {label:'Success Criteria',key:'success',type:'text',placeholder:'e.g. participants can run effective 1:1s independently by week 6'}
+   ],
+   template:(f)=>`You are a learning and development specialist with expertise in adult learning principles.
+
+Design a training plan for: ${f.name||'[Programme Name]'}
+Target audience: ${f.audience||'[Target audience]'}
+Participants: ${f.size||'[Number]'}
+Duration: ${f.duration||'[Duration]'}
+
+Topics to cover:
+${f.topics||'[Skills and topics]'}
+
+Budget/resources: ${f.budget||'[Budget]'}
+Delivery format: ${f.format||'[Format]'}
+Success criteria: ${f.success||'[How success is measured]'}
+
+Create a training plan that includes:
+1. Programme overview (objectives, audience, prerequisites)
+2. Session-by-session outline:
+   - Session title and learning objectives
+   - Activities and methods (mix of teach, practice, apply)
+   - Materials and preparation needed
+   - Duration breakdown
+3. Pre-work and post-work for each session
+4. Assessment approach (how you'll measure learning)
+5. Resources list (readings, tools, templates)
+6. Facilitator guide notes for each session
+7. Participant feedback form
+8. 30-day follow-up plan to reinforce learning
+9. Programme evaluation framework (reaction, learning, behaviour, results)`},
+
+  {id:'survey',icon:'📝',name:'Employee Survey',goal:'Design a survey that generates actionable insights, not just data',
+   fields:[
+     {label:'Survey Type',key:'type',type:'text',placeholder:'e.g. engagement, pulse, onboarding, exit, DEI'},
+     {label:'Target Population',key:'population',type:'text',placeholder:'e.g. all employees, new hires < 90 days, engineering department'},
+     {label:'Key Topics/Themes to Cover',key:'topics',type:'textarea',placeholder:'e.g. manager effectiveness, career development, work-life balance'},
+     {label:'Survey Tool',key:'tool',type:'text',placeholder:'e.g. Google Forms, SurveyMonkey, Culture Amp'},
+     {label:'Anonymous?',key:'anonymous',type:'text',placeholder:'e.g. yes / no / partially (demographic cuts only)'},
+     {label:'Desired Length',key:'length',type:'text',placeholder:'e.g. 15 questions, 5-minute completion time'}
+   ],
+   template:(f)=>`You are an employee experience researcher and survey design expert.
+
+Design a ${f.type||'[Survey Type]'} survey for ${f.population||'[Target Population]'}.
+
+Topics to cover:
+${f.topics||'[Key themes]'}
+
+Survey tool: ${f.tool||'[Tool]'}
+Anonymous: ${f.anonymous||'[Yes/No]'}
+Target length: ${f.length||'[Length]'}
+
+Create:
+1. Welcome message explaining purpose and how feedback will be used
+2. Questions organized by theme (mix of formats):
+   - Likert scale questions (strongly disagree to strongly agree)
+   - Multiple choice where appropriate
+   - 2-3 open-ended questions placed strategically
+   - Include one eNPS question
+
+3. For each question, specify:
+   - The question text
+   - Response format
+   - Why this question matters (for internal reference)
+
+4. Demographic questions (optional section):
+   - Department, tenure, level (nothing individually identifying)
+
+5. Closing message with:
+   - Thank you
+   - When results will be shared
+   - How to provide additional feedback
+
+6. Analysis framework:
+   - Scoring methodology
+   - Benchmarking approach
+   - Action planning template based on results
+   - Communication template for sharing findings`},
+
+  {id:'comp',icon:'💰',name:'Compensation Communication',goal:'Communicate pay decisions with transparency and fairness',
+   fields:[
+     {label:'Communication Type',key:'type',type:'text',placeholder:'e.g. annual raise, promotion, salary adjustment, bonus announcement'},
+     {label:'Employee/Audience',key:'audience',type:'text',placeholder:'e.g. individual employee name, or "all employees"'},
+     {label:'Key Details',key:'details',type:'textarea',placeholder:'e.g. 5% merit increase effective April 1, based on exceeds expectations rating'},
+     {label:'Compensation Philosophy Reference',key:'philosophy',type:'text',placeholder:'e.g. we target 75th percentile for base salary in our market'},
+     {label:'Context/Reasoning',key:'context',type:'textarea',placeholder:'e.g. strong performance, market adjustment, promotion to Senior level'},
+     {label:'Tone',key:'tone',type:'text',placeholder:'e.g. celebratory, matter-of-fact, empathetic'}
+   ],
+   template:(f)=>`You are an HR compensation communication specialist.
+
+Create a ${f.type||'[Communication Type]'} communication for ${f.audience||'[Audience]'}.
+
+Key details:
+${f.details||'[Compensation details]'}
+
+Compensation philosophy: ${f.philosophy||'[Philosophy]'}
+Context/reasoning: ${f.context||'[Context]'}
+
+Create:
+1. Manager talking points for delivering the news in a 1:1 (bullet format):
+   - How to open the conversation
+   - Key messages to convey
+   - How to explain the reasoning
+   - How to connect pay to performance/market data
+   - How to handle potential disappointment
+
+2. Written confirmation letter/email:
+   - Professional, clear format
+   - All relevant details (new amount, effective date, next review date)
+   - Brief explanation of how the decision was made
+   - Appreciation for contributions
+
+3. If communicating to all employees (e.g., annual cycle):
+   - Company-wide email explaining the compensation review process
+   - FAQ addressing common questions about pay decisions
+   - Timeline of next steps
+
+4. Handling difficult responses:
+   - "I expected more" — response script
+   - "My colleague got more" — response script
+   - "I have another offer" — response script
+
+Tone: ${f.tone||'professional, transparent, and fair'}.`},
+
+  {id:'workforce',icon:'📈',name:'Workforce Planning',goal:'Build a data-driven workforce plan aligned with business strategy',
+   fields:[
+     {label:'Planning Horizon',key:'horizon',type:'text',placeholder:'e.g. next 12 months, next fiscal year, 3-year plan'},
+     {label:'Business Goals',key:'goals',type:'textarea',placeholder:'e.g. expand to 2 new markets, launch enterprise product, grow revenue 40%'},
+     {label:'Current Headcount & Structure',key:'current',type:'textarea',placeholder:'e.g. 150 total: 40 engineering, 25 sales, 20 marketing, 15 CS, 10 ops...'},
+     {label:'Known Gaps or Pain Points',key:'gaps',type:'textarea',placeholder:'e.g. no data engineering team, sales team understaffed for pipeline'},
+     {label:'Budget Context',key:'budget',type:'text',placeholder:'e.g. approved for 30 new hires, budget of £2M fully loaded'},
+     {label:'Constraints',key:'constraints',type:'textarea',placeholder:'e.g. hiring freeze in Q3, must reduce contractor spend by 20%'}
+   ],
+   template:(f)=>`You are a workforce planning and HR strategy consultant.
+
+Help me build a workforce plan for: ${f.horizon||'[Planning Horizon]'}
+
+Business goals:
+${f.goals||'[Business goals]'}
+
+Current headcount & structure:
+${f.current||'[Current state]'}
+
+Known gaps:
+${f.gaps||'[Known gaps]'}
+
+Budget: ${f.budget||'[Budget]'}
+Constraints: ${f.constraints||'[Constraints]'}
+
+Create a workforce plan that includes:
+1. Executive summary (1 page: key recommendations, headcount changes, investment needed)
+
+2. Demand analysis:
+   - For each business goal, what roles and headcount are needed
+   - Skills required vs. skills available
+   - Priority ranking of roles to fill
+
+3. Supply analysis:
+   - Current talent assessment (strength areas, risk areas)
+   - Attrition forecast (based on historical data placeholder)
+   - Internal mobility opportunities
+   - Succession planning gaps
+
+4. Gap analysis:
+   - Roles to create (new positions)
+   - Roles to fill (backfill + growth)
+   - Roles to restructure or eliminate
+   - Skills to develop internally vs. hire
+
+5. Hiring plan:
+   - Quarterly hiring targets by department
+   - Priority order and dependencies
+   - Build vs. buy vs. borrow recommendations for each gap
+
+6. Budget summary: cost projections by quarter
+7. Risk register: top 5 workforce risks and mitigations
+8. 90-day action plan to begin implementation`}
+];
+
+function renderFramework(){
+  document.getElementById('fw-tasks').innerHTML=frameworks.map(f=>`
+    <div class="task-card" onclick="selectFramework('${f.id}')">
+      <div class="icon">${f.icon}</div>
+      <h4>${f.name}</h4>
+    </div>`).join('');
+}
+function selectFramework(id){
+  const f=frameworks.find(x=>x.id===id);
+  document.querySelectorAll('.task-card').forEach(c=>c.classList.remove('selected'));
+  event.currentTarget.classList.add('selected');
+  const builder=document.getElementById('fw-builder');
+  builder.style.display='block';
+  builder.innerHTML=`
+    <div class="framework-section">
+      <h3>${f.icon} ${f.name}</h3>
+      <p style="color:var(--gray-600);font-size:14px;margin-bottom:20px"><strong>Goal:</strong> ${f.goal}</p>
+      ${f.fields.map(fd=>`
+        <div class="field-group">
+          <label>${fd.label}</label>
+          ${fd.type==='textarea'?`<textarea id="fw-${fd.key}" placeholder="${fd.placeholder}" oninput="updateFrameworkOutput('${id}')"></textarea>`:`<input type="text" id="fw-${fd.key}" placeholder="${fd.placeholder}" oninput="updateFrameworkOutput('${id}')">`}
+        </div>`).join('')}
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:12px">
+      <button class="btn btn-primary" onclick="copyText(document.getElementById('fw-output').textContent)">Copy Prompt</button>
+      <button class="btn btn-secondary" onclick="resetFramework('${id}')">Reset</button>
+    </div>
+    <div class="template-output" id="fw-output"></div>`;
+  updateFrameworkOutput(id);
+  builder.scrollIntoView({behavior:'smooth',block:'start'});
+}
+function updateFrameworkOutput(id){
+  const f=frameworks.find(x=>x.id===id);
+  const vals={};
+  f.fields.forEach(fd=>{
+    const el=document.getElementById('fw-'+fd.key);
+    vals[fd.key]=el?el.value.trim():'';
+  });
+  document.getElementById('fw-output').textContent=f.template(vals);
+}
+function resetFramework(id){
+  const f=frameworks.find(x=>x.id===id);
+  f.fields.forEach(fd=>{const el=document.getElementById('fw-'+fd.key);if(el)el.value='';});
+  updateFrameworkOutput(id);
+}
+
+/* ========== INIT ========== */
+renderLibrary();
+renderBuilderExamples();
+renderFramework();
+updateBuilder();
+</script>
+</body>
+</html>
