@@ -3,632 +3,508 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HR AI Toolkit</title>
+<title>HR AI Toolkit — Professional Prompt Library</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0d0d0d;--ink-muted:#6b6b6b;--ink-faint:#b0b0b0;
+  --surface:#f5f4f0;--white:#fff;
+  --accent:#ff4d2e;--accent-soft:#fff0ed;--accent3:#00c896;
+  --border:rgba(0,0,0,0.08);--border-strong:rgba(0,0,0,0.16);
+  --card-r:20px;--pill-r:100px;
+}
+html{font-size:16px;scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--surface);color:var(--ink);min-height:100vh;overflow-x:hidden}
 
-  :root {
-    --ink: #0d0d0d;
-    --ink-muted: #6b6b6b;
-    --ink-faint: #b0b0b0;
-    --surface: #f5f4f0;
-    --white: #ffffff;
-    --accent: #ff4d2e;
-    --accent-soft: #fff0ed;
-    --accent2: #1a1a2e;
-    --accent3: #00c896;
-    --border: rgba(0,0,0,0.09);
-    --border-strong: rgba(0,0,0,0.18);
-    --card-radius: 20px;
-    --pill-radius: 100px;
-  }
+/* ── NAV ── */
+nav{position:sticky;top:0;z-index:200;background:rgba(245,244,240,0.9);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 2.5rem;height:64px}
+.nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.05rem;letter-spacing:-.03em;display:flex;align-items:center;gap:8px}
+.nav-dot{width:9px;height:9px;border-radius:50%;background:var(--accent)}
+.nav-tabs{display:flex;gap:3px;background:var(--white);border:1px solid var(--border);border-radius:var(--pill-r);padding:4px}
+.nav-tab{font-family:'DM Sans',sans-serif;font-size:.81rem;font-weight:500;color:var(--ink-muted);border:none;background:transparent;padding:6px 16px;border-radius:var(--pill-r);cursor:pointer;transition:all .2s;white-space:nowrap}
+.nav-tab.active{background:var(--ink);color:#fff}
+.nav-tab:hover:not(.active){color:var(--ink);background:var(--surface)}
 
-  html { font-size: 16px; scroll-behavior: smooth; }
+/* ── SECTIONS ── */
+.section{display:none}.section.active{display:block}
 
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--surface);
-    color: var(--ink);
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
+/* ── HERO ── */
+.hero{padding:4.5rem 2.5rem 2.5rem;max-width:1140px;margin:0 auto}
+.eyebrow{display:inline-flex;align-items:center;gap:7px;background:var(--accent-soft);color:var(--accent);border:1px solid rgba(255,77,46,.2);font-size:.74rem;font-weight:500;padding:4px 13px;border-radius:var(--pill-r);margin-bottom:1.6rem;letter-spacing:.07em;text-transform:uppercase}
+.eyebrow-dot{width:5px;height:5px;border-radius:50%;background:var(--accent)}
+.hero-title{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(2.6rem,5.5vw,4.6rem);line-height:1.03;letter-spacing:-.04em;max-width:660px;margin-bottom:1rem}
+.hero-title em{font-style:normal;color:var(--accent)}
+.hero-sub{font-size:1rem;color:var(--ink-muted);max-width:460px;line-height:1.7;margin-bottom:2.5rem;font-weight:300}
+.stat-row{display:flex;gap:2rem;align-items:center;flex-wrap:wrap}
+.stat{display:flex;flex-direction:column;gap:2px}
+.stat-num{font-family:'Syne',sans-serif;font-size:1.9rem;font-weight:700;line-height:1}
+.stat-lbl{font-size:.74rem;color:var(--ink-faint)}
+.stat-div{width:1px;height:36px;background:var(--border-strong)}
 
-  /* NAV */
-  nav {
-    position: sticky; top: 0; z-index: 100;
-    background: rgba(245,244,240,0.85);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 0 2.5rem;
-    height: 64px;
-  }
-  .nav-logo {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800; font-size: 1.1rem;
-    letter-spacing: -0.03em;
-    display: flex; align-items: center; gap: 8px;
-  }
-  .nav-logo-dot {
-    width: 10px; height: 10px; border-radius: 50%;
-    background: var(--accent); display: inline-block;
-  }
-  .nav-tabs {
-    display: flex; gap: 4px;
-    background: var(--white);
-    border: 1px solid var(--border);
-    border-radius: var(--pill-radius);
-    padding: 4px;
-  }
-  .nav-tab {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.82rem; font-weight: 500;
-    color: var(--ink-muted);
-    border: none; background: transparent;
-    padding: 6px 18px; border-radius: var(--pill-radius);
-    cursor: pointer; transition: all 0.2s;
-    letter-spacing: 0.01em;
-  }
-  .nav-tab.active {
-    background: var(--ink);
-    color: var(--white);
-  }
-  .nav-tab:hover:not(.active) { color: var(--ink); background: var(--surface); }
+/* ── SEARCH ── */
+.search-wrap{max-width:1140px;margin:0 auto;padding:0 2.5rem 1.5rem}
+.search-bar{display:flex;gap:10px;background:var(--white);border:1.5px solid var(--border-strong);border-radius:14px;padding:9px 9px 9px 18px;align-items:center;transition:border-color .2s}
+.search-bar:focus-within{border-color:var(--ink)}
+.search-bar input{border:none;outline:none;background:transparent;font-family:'DM Sans',sans-serif;font-size:.92rem;color:var(--ink);flex:1}
+.search-bar input::placeholder{color:var(--ink-faint)}
 
-  /* SECTIONS */
-  .section { display: none; }
-  .section.active { display: block; }
+/* ── FILTERS ── */
+.filter-row{max-width:1140px;margin:0 auto;padding:0 2.5rem 2rem;display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+.filter-lbl{font-size:.73rem;color:var(--ink-faint);font-weight:500;letter-spacing:.05em;text-transform:uppercase;margin-right:2px}
+.pill{font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:500;border:1.5px solid var(--border-strong);background:var(--white);color:var(--ink-muted);border-radius:var(--pill-r);padding:5px 14px;cursor:pointer;transition:all .18s;white-space:nowrap}
+.pill.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+.pill:hover:not(.active){border-color:var(--ink);color:var(--ink)}
 
-  /* ─── HERO ─── */
-  .hero {
-    padding: 5rem 2.5rem 3rem;
-    max-width: 1100px; margin: 0 auto;
-  }
-  .hero-eyebrow {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: var(--accent-soft);
-    color: var(--accent);
-    border: 1px solid rgba(255,77,46,0.2);
-    font-size: 0.78rem; font-weight: 500;
-    padding: 5px 14px; border-radius: var(--pill-radius);
-    margin-bottom: 1.8rem;
-    letter-spacing: 0.06em; text-transform: uppercase;
-  }
-  .hero-eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
-  .hero-title {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
-    font-size: clamp(2.8rem, 6vw, 5rem);
-    line-height: 1.02;
-    letter-spacing: -0.04em;
-    color: var(--ink);
-    max-width: 680px;
-    margin-bottom: 1.2rem;
-  }
-  .hero-title em {
-    font-style: normal;
-    color: var(--accent);
-    position: relative;
-  }
-  .hero-sub {
-    font-size: 1.05rem;
-    color: var(--ink-muted);
-    max-width: 480px;
-    line-height: 1.65;
-    margin-bottom: 2.5rem;
-    font-weight: 300;
-  }
-  .hero-stat-row {
-    display: flex; gap: 2.5rem;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-  .hero-stat { display: flex; flex-direction: column; gap: 2px; }
-  .hero-stat-num {
-    font-family: 'Syne', sans-serif;
-    font-size: 2rem; font-weight: 700; color: var(--ink);
-    line-height: 1;
-  }
-  .hero-stat-label { font-size: 0.78rem; color: var(--ink-faint); font-weight: 400; }
-  .hero-divider { width: 1px; height: 40px; background: var(--border-strong); }
+/* ── PROMPT GRID ── */
+.pg{max-width:1140px;margin:0 auto;padding:0 2.5rem 5rem;display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:14px}
+.pc{background:var(--white);border:1px solid var(--border);border-radius:var(--card-r);padding:1.4rem;display:flex;flex-direction:column;gap:11px;transition:transform .2s,box-shadow .2s,border-color .2s;cursor:default}
+.pc:hover{transform:translateY(-3px);box-shadow:0 14px 40px rgba(0,0,0,.07);border-color:var(--border-strong)}
+.pc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.pc-title{font-family:'Syne',sans-serif;font-weight:600;font-size:.94rem;color:var(--ink);line-height:1.3;flex:1}
+.badge{font-size:.68rem;font-weight:500;padding:3px 9px;border-radius:var(--pill-r);white-space:nowrap;flex-shrink:0;letter-spacing:.02em}
+.b-r{background:#e8f4fe;color:#1565c0}.b-o{background:#e8fef4;color:#1b6b3a}.b-p{background:#fff3e0;color:#b35a00}
+.b-e{background:#f3e8ff;color:#6a0dad}.b-ex{background:#fde8e8;color:#b52121}.b-lr{background:#e8f0ff;color:#1a2f7a}
+.b-l{background:#e8ffe8;color:#1a6b1a}.b-c{background:#fffde8;color:#7a6b00}.b-d{background:#fde8f8;color:#7a006b}
+.b-t{background:#e8f8fd;color:#006b6b}.b-w{background:#f8f0e8;color:#7a4000}
+.pc-prev{font-size:.8rem;color:var(--ink-muted);line-height:1.55;font-weight:300;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.pc-meta{display:flex;align-items:center;justify-content:space-between;margin-top:3px}
+.pc-industry{font-size:.7rem;color:var(--ink-faint);font-weight:400}
+.btn-copy{display:flex;align-items:center;gap:5px;font-family:'DM Sans',sans-serif;font-size:.77rem;font-weight:500;background:var(--surface);color:var(--ink);border:1px solid var(--border-strong);border-radius:9px;padding:5px 12px;cursor:pointer;transition:all .18s}
+.btn-copy:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
+.btn-copy.copied{background:var(--accent3);color:#fff;border-color:var(--accent3)}
+.no-res{grid-column:1/-1;text-align:center;padding:5rem 1rem;color:var(--ink-muted)}
+.no-res strong{font-family:'Syne',sans-serif;font-size:1.2rem;display:block;color:var(--ink);margin-bottom:.4rem}
 
-  /* SEARCH */
-  .search-bar-wrap {
-    max-width: 1100px; margin: 0 auto;
-    padding: 0 2.5rem 2rem;
-  }
-  .search-bar {
-    display: flex; gap: 12px;
-    background: var(--white);
-    border: 1.5px solid var(--border-strong);
-    border-radius: 16px;
-    padding: 10px 10px 10px 20px;
-    align-items: center;
-    transition: border-color 0.2s;
-  }
-  .search-bar:focus-within { border-color: var(--ink); }
-  .search-icon { font-size: 18px; color: var(--ink-faint); flex-shrink: 0; }
-  .search-bar input {
-    border: none; outline: none; background: transparent;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.95rem; color: var(--ink);
-    flex: 1;
-  }
-  .search-bar input::placeholder { color: var(--ink-faint); }
+/* ══════════════════════════════════════
+   PROMPT BUILDER
+══════════════════════════════════════ */
+.builder-page{max-width:1140px;margin:0 auto;padding:3.5rem 2.5rem 5rem}
+.builder-header{margin-bottom:2.5rem}
+.sec-eyebrow{font-size:.72rem;font-weight:500;letter-spacing:.09em;text-transform:uppercase;color:var(--accent);margin-bottom:.5rem}
+.sec-title{font-family:'Syne',sans-serif;font-size:clamp(1.7rem,3vw,2.4rem);font-weight:800;letter-spacing:-.03em;line-height:1.1;color:var(--ink)}
+.sec-sub{font-size:.92rem;color:var(--ink-muted);line-height:1.65;margin-top:.5rem;font-weight:300}
 
-  /* FILTER PILLS */
-  .filter-row {
-    max-width: 1100px; margin: 0 auto;
-    padding: 0 2.5rem 2.5rem;
-    display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
-  }
-  .filter-label { font-size: 0.78rem; color: var(--ink-faint); font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; margin-right: 4px; }
-  .filter-pill {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.8rem; font-weight: 500;
-    border: 1.5px solid var(--border-strong);
-    background: var(--white);
-    color: var(--ink-muted);
-    border-radius: var(--pill-radius);
-    padding: 5px 16px; cursor: pointer;
-    transition: all 0.18s;
-    white-space: nowrap;
-  }
-  .filter-pill.active { background: var(--ink); color: var(--white); border-color: var(--ink); }
-  .filter-pill:hover:not(.active) { border-color: var(--ink); color: var(--ink); }
+/* ── STEPS ── */
+.steps-nav{display:flex;align-items:center;gap:0;margin-bottom:2.5rem;background:var(--white);border:1px solid var(--border);border-radius:16px;padding:6px;overflow-x:auto}
+.step-btn{display:flex;align-items:center;gap:8px;font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:500;color:var(--ink-muted);background:transparent;border:none;border-radius:11px;padding:8px 14px;cursor:pointer;transition:all .2s;white-space:nowrap;flex:1;justify-content:center}
+.step-btn.active{background:var(--ink);color:#fff}
+.step-btn.done{color:var(--accent3)}
+.step-num{width:20px;height:20px;border-radius:6px;background:var(--surface);font-size:.68rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s}
+.step-btn.active .step-num{background:rgba(255,255,255,.2);color:#fff}
+.step-btn.done .step-num{background:rgba(0,200,150,.15);color:var(--accent3)}
+.step-sep{width:1px;height:24px;background:var(--border);flex-shrink:0}
 
-  /* PROMPT GRID */
-  .prompt-grid {
-    max-width: 1100px; margin: 0 auto;
-    padding: 0 2.5rem 5rem;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 16px;
-  }
-  .prompt-card {
-    background: var(--white);
-    border: 1px solid var(--border);
-    border-radius: var(--card-radius);
-    padding: 1.5rem;
-    display: flex; flex-direction: column; gap: 12px;
-    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
-    cursor: default;
-  }
-  .prompt-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 40px rgba(0,0,0,0.08);
-    border-color: var(--border-strong);
-  }
-  .prompt-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
-  .prompt-badge {
-    font-size: 0.72rem; font-weight: 500;
-    padding: 4px 10px; border-radius: var(--pill-radius);
-    white-space: nowrap; flex-shrink: 0;
-    letter-spacing: 0.02em;
-  }
-  .badge-recruit { background: #e8f4fe; color: #1565c0; }
-  .badge-onboard { background: #e8fef4; color: #1b6b3a; }
-  .badge-perf { background: #fff3e0; color: #b35a00; }
-  .badge-engage { background: #f3e8ff; color: #6a0dad; }
-  .badge-exit { background: #fde8e8; color: #b52121; }
-  .badge-lr { background: #e8f0ff; color: #1a2f7a; }
-  .badge-develop { background: #e8ffe8; color: #1a6b1a; }
-  .badge-comp { background: #fffde8; color: #7a6b00; }
-  .badge-other { background: #f0f0f0; color: #444; }
-  .prompt-title {
-    font-family: 'Syne', sans-serif;
-    font-weight: 600; font-size: 0.97rem;
-    color: var(--ink); line-height: 1.3;
-    flex: 1;
-  }
-  .prompt-preview {
-    font-size: 0.83rem; color: var(--ink-muted);
-    line-height: 1.55; font-weight: 300;
-    display: -webkit-box; -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical; overflow: hidden;
-  }
-  .prompt-actions { display: flex; justify-content: flex-end; margin-top: 4px; }
-  .btn-copy {
-    display: flex; align-items: center; gap: 6px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.8rem; font-weight: 500;
-    background: var(--surface); color: var(--ink);
-    border: 1px solid var(--border-strong);
-    border-radius: 10px; padding: 6px 14px;
-    cursor: pointer; transition: all 0.18s;
-  }
-  .btn-copy:hover { background: var(--ink); color: var(--white); border-color: var(--ink); }
-  .btn-copy.copied { background: var(--accent3); color: var(--white); border-color: var(--accent3); }
-  .no-results {
-    grid-column: 1/-1;
-    text-align: center; padding: 5rem 1rem;
-    color: var(--ink-muted); font-size: 1rem;
-  }
-  .no-results strong { font-family: 'Syne', sans-serif; font-size: 1.3rem; display: block; color: var(--ink); margin-bottom: 0.4rem; }
+/* ── BUILDER LAYOUT ── */
+.builder-layout{display:grid;grid-template-columns:1fr 420px;gap:1.5rem;align-items:start}
+@media(max-width:900px){.builder-layout{grid-template-columns:1fr}}
 
-  /* ─── BUILDER SECTION ─── */
-  .builder-wrap {
-    max-width: 1100px; margin: 0 auto;
-    padding: 4rem 2.5rem 5rem;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
-    align-items: start;
-  }
-  @media (max-width: 800px) { .builder-wrap { grid-template-columns: 1fr; } }
+/* ── STEP PANELS ── */
+.step-panel{display:none}.step-panel.active{display:flex;flex-direction:column;gap:14px}
+.field-grp{display:flex;flex-direction:column;gap:6px}
+.field-lbl{font-size:.74rem;font-weight:500;color:var(--ink-muted);letter-spacing:.05em;text-transform:uppercase;display:flex;align-items:center;gap:6px}
+.field-tip{font-size:.68rem;background:var(--accent-soft);color:var(--accent);padding:2px 8px;border-radius:100px;text-transform:none;letter-spacing:0;font-weight:400}
+.field-why{font-size:.78rem;color:var(--ink-faint);line-height:1.5;margin-top:2px;font-style:italic}
+.fi,.ft,.fs{font-family:'DM Sans',sans-serif;font-size:.87rem;color:var(--ink);background:var(--white);border:1.5px solid var(--border-strong);border-radius:12px;padding:10px 13px;outline:none;width:100%;transition:border-color .2s}
+.fi:focus,.ft:focus,.fs:focus{border-color:var(--ink)}
+.ft{min-height:80px;resize:none}
+.fs{appearance:none;cursor:pointer}
+.char-count{font-size:.7rem;color:var(--ink-faint);text-align:right;margin-top:2px}
 
-  .section-header { margin-bottom: 2.5rem; }
-  .section-eyebrow {
-    font-size: 0.75rem; font-weight: 500;
-    letter-spacing: 0.08em; text-transform: uppercase;
-    color: var(--accent); margin-bottom: 0.6rem;
-  }
-  .section-title {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(1.8rem, 3.5vw, 2.5rem);
-    font-weight: 800; letter-spacing: -0.03em;
-    line-height: 1.1; color: var(--ink);
-  }
-  .section-sub {
-    font-size: 0.95rem; color: var(--ink-muted);
-    line-height: 1.6; margin-top: 0.6rem; font-weight: 300;
-  }
+/* ── TECHNIQUE CARDS ── */
+.technique-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tech-card{background:var(--white);border:2px solid var(--border);border-radius:14px;padding:12px 14px;cursor:pointer;transition:all .18s;text-align:left}
+.tech-card:hover{border-color:var(--border-strong)}
+.tech-card.selected{border-color:var(--accent);background:var(--accent-soft)}
+.tech-card-icon{font-size:1.2rem;margin-bottom:6px}
+.tech-card-name{font-family:'Syne',sans-serif;font-size:.85rem;font-weight:700;color:var(--ink);margin-bottom:3px}
+.tech-card-desc{font-size:.74rem;color:var(--ink-muted);line-height:1.5}
 
-  .builder-fields { display: flex; flex-direction: column; gap: 14px; }
-  .field-group { display: flex; flex-direction: column; gap: 6px; }
-  .field-label {
-    font-size: 0.78rem; font-weight: 500;
-    color: var(--ink-muted); letter-spacing: 0.04em;
-    text-transform: uppercase; display: flex; align-items: center; gap: 6px;
-  }
-  .field-label-badge {
-    font-size: 0.68rem; background: var(--accent-soft); color: var(--accent);
-    padding: 2px 8px; border-radius: 100px;
-    text-transform: none; letter-spacing: 0;
-  }
-  .field-input, .field-textarea, .field-select {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.88rem; color: var(--ink);
-    background: var(--white);
-    border: 1.5px solid var(--border-strong);
-    border-radius: 12px; padding: 10px 14px;
-    outline: none; width: 100%;
-    transition: border-color 0.2s;
-    resize: none;
-  }
-  .field-input:focus, .field-textarea:focus, .field-select:focus { border-color: var(--ink); }
-  .field-textarea { min-height: 70px; }
-  .field-select { appearance: none; cursor: pointer; }
+/* ── SCORE PANEL ── */
+.score-panel{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:1.4rem;margin-bottom:1rem}
+.score-header{display:flex;align-items:center;gap:14px;margin-bottom:1rem}
+.score-ring-wrap{position:relative;width:70px;height:70px;flex-shrink:0}
+.score-ring-wrap svg{transform:rotate(-90deg)}
+.score-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:1.2rem}
+.score-label{font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;color:var(--ink)}
+.score-desc{font-size:.78rem;color:var(--ink-muted);margin-top:2px;line-height:1.4}
+.score-bars{display:flex;flex-direction:column;gap:8px}
+.score-bar-row{display:flex;align-items:center;gap:8px}
+.score-bar-lbl{font-size:.72rem;color:var(--ink-muted);width:80px;flex-shrink:0}
+.score-bar-track{flex:1;height:5px;background:var(--surface);border-radius:100px;overflow:hidden}
+.score-bar-fill{height:100%;border-radius:100px;background:var(--accent);transition:width .4s ease}
+.score-bar-fill.green{background:var(--accent3)}
+.score-bar-val{font-size:.7rem;color:var(--ink-faint);width:24px;text-align:right;flex-shrink:0}
 
-  .builder-score-ring {
-    display: flex; align-items: center; gap: 12px;
-    background: var(--white);
-    border: 1px solid var(--border);
-    border-radius: 14px; padding: 14px 18px;
-    margin-top: 4px;
-  }
-  .ring-wrap { position: relative; width: 60px; height: 60px; flex-shrink: 0; }
-  .ring-wrap svg { transform: rotate(-90deg); }
-  .ring-score {
-    position: absolute; inset: 0;
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.1rem;
-  }
-  .score-label {
-    font-family: 'Syne', sans-serif; font-weight: 700;
-    font-size: 0.95rem; color: var(--ink);
-  }
-  .score-desc { font-size: 0.8rem; color: var(--ink-muted); margin-top: 2px; }
+/* ── OUTPUT PANEL ── */
+.output-card{background:var(--ink);border-radius:var(--card-r);padding:1.8rem;position:sticky;top:84px;display:flex;flex-direction:column;gap:14px}
+.out-label{font-size:.68rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.35)}
+.out-text{font-family:'DM Sans',sans-serif;font-size:.87rem;color:rgba(255,255,255,.82);line-height:1.75;font-weight:300;min-height:220px;white-space:pre-wrap;max-height:420px;overflow-y:auto}
+.out-placeholder{color:rgba(255,255,255,.22);font-style:italic}
+.out-actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn-primary{display:flex;align-items:center;gap:6px;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:500;background:var(--accent);color:#fff;border:none;border-radius:11px;padding:9px 18px;cursor:pointer;transition:opacity .18s}
+.btn-primary:hover{opacity:.85}
+.btn-ghost{display:flex;align-items:center;gap:6px;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:500;background:rgba(255,255,255,.08);color:rgba(255,255,255,.65);border:1px solid rgba(255,255,255,.13);border-radius:11px;padding:9px 18px;cursor:pointer;transition:all .18s}
+.btn-ghost:hover{background:rgba(255,255,255,.15);color:#fff}
+.out-word-count{font-size:.7rem;color:rgba(255,255,255,.25);text-align:right}
 
-  .prompt-output-card {
-    background: var(--ink);
-    border-radius: var(--card-radius);
-    padding: 2rem;
-    position: sticky; top: 84px;
-    display: flex; flex-direction: column; gap: 16px;
-  }
-  .output-label {
-    font-size: 0.72rem; font-weight: 500; letter-spacing: 0.1em;
-    text-transform: uppercase; color: rgba(255,255,255,0.4);
-  }
-  .output-text {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.9rem; color: rgba(255,255,255,0.85);
-    line-height: 1.7; font-weight: 300;
-    min-height: 200px; white-space: pre-wrap;
-  }
-  .output-placeholder { color: rgba(255,255,255,0.25); font-style: italic; }
-  .output-actions { display: flex; gap: 10px; flex-wrap: wrap; }
-  .btn-primary {
-    display: flex; align-items: center; gap: 7px;
-    font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 500;
-    background: var(--accent); color: var(--white);
-    border: none; border-radius: 12px; padding: 10px 20px;
-    cursor: pointer; transition: opacity 0.18s;
-  }
-  .btn-primary:hover { opacity: 0.85; }
-  .btn-ghost {
-    display: flex; align-items: center; gap: 7px;
-    font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 500;
-    background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.7);
-    border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; padding: 10px 20px;
-    cursor: pointer; transition: all 0.18s;
-  }
-  .btn-ghost:hover { background: rgba(255,255,255,0.15); color: var(--white); }
+/* ── TIPS BOX ── */
+.tip-box{background:var(--accent-soft);border:1px solid rgba(255,77,46,.15);border-radius:14px;padding:1rem 1.2rem}
+.tip-box-title{font-family:'Syne',sans-serif;font-size:.85rem;font-weight:700;color:var(--accent);margin-bottom:.5rem;display:flex;align-items:center;gap:6px}
+.tip-box ul{padding-left:1rem}
+.tip-box li{font-size:.8rem;color:var(--ink-muted);line-height:1.6;margin-bottom:3px}
 
-  /* PATTERNS */
-  .patterns-grid {
-    padding: 0 2.5rem 5rem;
-    max-width: 1100px; margin: 0 auto;
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px;
-  }
-  .pattern-card {
-    background: var(--white);
-    border: 1px solid var(--border);
-    border-radius: var(--card-radius);
-    padding: 1.5rem;
-    display: flex; flex-direction: column; gap: 12px;
-  }
-  .pattern-icon-wrap {
-    width: 44px; height: 44px;
-    border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 20px;
-  }
-  .pattern-title {
-    font-family: 'Syne', sans-serif;
-    font-weight: 700; font-size: 1rem; color: var(--ink);
-  }
-  .pattern-desc { font-size: 0.83rem; color: var(--ink-muted); line-height: 1.55; }
-  .pattern-code {
-    background: var(--surface);
-    border: 1px solid var(--border-strong);
-    border-radius: 12px; padding: 14px;
-    font-family: 'DM Mono', 'Fira Mono', monospace;
-    font-size: 0.76rem; color: var(--ink-muted);
-    line-height: 1.65; white-space: pre-wrap;
-    word-break: break-word;
-  }
+/* ── PATTERNS ── */
+.patterns-section{margin-top:1.5rem}
+.patterns-title{font-size:.74rem;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:.8rem}
+.pattern-cards{display:flex;flex-direction:column;gap:8px}
+.pat-card{background:var(--white);border:1px solid var(--border);border-radius:13px;padding:.9rem 1rem;display:flex;align-items:flex-start;gap:10px}
+.pat-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.pat-body{flex:1}
+.pat-name{font-family:'Syne',sans-serif;font-size:.85rem;font-weight:700;color:var(--ink);margin-bottom:2px}
+.pat-desc{font-size:.76rem;color:var(--ink-muted);line-height:1.5}
+.pat-btn{font-size:.72rem;padding:4px 10px;border:1px solid var(--border-strong);border-radius:7px;background:var(--white);cursor:pointer;font-family:'DM Sans',sans-serif;color:var(--ink-muted);margin-top:6px;transition:all .15s}
+.pat-btn:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
 
-  /* ─── FRAMEWORK SECTION ─── */
-  .framework-wrap {
-    max-width: 1100px; margin: 0 auto;
-    padding: 4rem 2.5rem 5rem;
-    display: grid; grid-template-columns: 280px 1fr; gap: 2rem; align-items: start;
-  }
-  @media (max-width: 800px) { .framework-wrap { grid-template-columns: 1fr; } }
+/* ── NAV BTNS ── */
+.step-nav-btns{display:flex;justify-content:space-between;margin-top:1.5rem}
+.btn-back{font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:500;background:var(--white);color:var(--ink-muted);border:1.5px solid var(--border-strong);border-radius:11px;padding:9px 20px;cursor:pointer;transition:all .18s}
+.btn-back:hover{color:var(--ink);border-color:var(--ink)}
+.btn-next{font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:500;background:var(--ink);color:#fff;border:none;border-radius:11px;padding:9px 24px;cursor:pointer;transition:opacity .18s}
+.btn-next:hover{opacity:.85}
 
-  .framework-nav { display: flex; flex-direction: column; gap: 6px; position: sticky; top: 84px; }
-  .fw-nav-item {
-    font-family: 'DM Sans', sans-serif; font-size: 0.88rem; font-weight: 500;
-    color: var(--ink-muted);
-    background: var(--white); border: 1px solid var(--border);
-    border-radius: 12px; padding: 10px 16px;
-    cursor: pointer; transition: all 0.18s;
-    text-align: left; display: flex; align-items: center; gap: 10px;
-  }
-  .fw-nav-item.active { background: var(--ink); color: var(--white); border-color: var(--ink); }
-  .fw-nav-item:hover:not(.active) { border-color: var(--border-strong); color: var(--ink); }
-  .fw-nav-num {
-    font-family: 'Syne', sans-serif; font-size: 0.72rem; font-weight: 700;
-    background: var(--surface); color: var(--ink-faint);
-    width: 22px; height: 22px; border-radius: 6px;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-  }
-  .fw-nav-item.active .fw-nav-num { background: rgba(255,255,255,0.15); color: var(--white); }
+/* ══════════════════════════════════════
+   FRAMEWORK
+══════════════════════════════════════ */
+.fw-page{max-width:1140px;margin:0 auto;padding:3.5rem 2.5rem 5rem;display:grid;grid-template-columns:260px 1fr;gap:1.5rem;align-items:start}
+@media(max-width:800px){.fw-page{grid-template-columns:1fr}}
+.fw-nav{display:flex;flex-direction:column;gap:5px;position:sticky;top:84px}
+.fw-nav-lbl{font-size:.7rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:.3rem;padding-left:4px}
+.fw-btn{font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:500;color:var(--ink-muted);background:var(--white);border:1px solid var(--border);border-radius:11px;padding:9px 14px;cursor:pointer;transition:all .18s;text-align:left;display:flex;align-items:center;gap:9px}
+.fw-btn.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+.fw-btn:hover:not(.active){border-color:var(--border-strong);color:var(--ink)}
+.fw-num{font-size:.7rem;font-weight:700;background:var(--surface);color:var(--ink-faint);width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s}
+.fw-btn.active .fw-num{background:rgba(255,255,255,.15);color:#fff}
+.fw-panel{display:none}.fw-panel.active{display:block}
+.fw-card{background:var(--white);border:1px solid var(--border);border-radius:var(--card-r);padding:2rem;display:flex;flex-direction:column;gap:1.2rem}
+.fw-field-lbl{font-size:.74rem;font-weight:500;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:5px}
+.fw-confidential{display:flex;align-items:center;gap:7px;font-size:.74rem;color:var(--ink-faint);background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:5px 10px;margin-top:4px;cursor:pointer;transition:background .15s;user-select:none}
+.fw-confidential:hover{background:#f0eeea}
+.fw-confidential input{cursor:pointer}
+.fw-result-box{background:var(--ink);border-radius:16px;padding:1.4rem;font-size:.88rem;color:rgba(255,255,255,.82);line-height:1.75;font-weight:300;white-space:pre-wrap;min-height:130px}
+.fw-result-box.empty{color:rgba(255,255,255,.25);font-style:italic}
 
-  .fw-content { display: none; }
-  .fw-content.active { display: block; }
-  .fw-content-card {
-    background: var(--white);
-    border: 1px solid var(--border);
-    border-radius: var(--card-radius);
-    padding: 2rem;
-    display: flex; flex-direction: column; gap: 1.2rem;
-  }
-  .fw-badge {
-    display: inline-block; font-size: 0.75rem; font-weight: 500;
-    padding: 4px 12px; border-radius: 100px;
-    letter-spacing: 0.04em; text-transform: uppercase;
-  }
-  .fw-field-label {
-    font-size: 0.78rem; font-weight: 500; letter-spacing: 0.04em;
-    text-transform: uppercase; color: var(--ink-muted); margin-bottom: 6px;
-  }
-  .fw-result {
-    background: var(--ink);
-    border-radius: 16px; padding: 1.5rem;
-    font-size: 0.9rem; color: rgba(255,255,255,0.82);
-    line-height: 1.7; font-weight: 300;
-    white-space: pre-wrap; min-height: 120px;
-  }
-  .fw-result.empty { color: rgba(255,255,255,0.25); font-style: italic; }
+/* TOAST */
+.toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--ink);color:#fff;font-family:'DM Sans',sans-serif;font-size:.83rem;font-weight:500;padding:9px 20px;border-radius:var(--pill-r);transition:transform .3s cubic-bezier(.22,1,.36,1),opacity .3s;opacity:0;pointer-events:none;z-index:9999;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
 
-  .toast {
-    position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(80px);
-    background: var(--ink); color: var(--white);
-    font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 500;
-    padding: 10px 22px; border-radius: var(--pill-radius);
-    transition: transform 0.3s cubic-bezier(0.22,1,0.36,1), opacity 0.3s;
-    opacity: 0; pointer-events: none; z-index: 9999;
-    white-space: nowrap;
-  }
-  .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+/* MODAL (prompt full view) */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:500;align-items:center;justify-content:center;padding:2rem}
+.modal-overlay.open{display:flex}
+.modal{background:var(--white);border-radius:var(--card-r);padding:2rem;max-width:620px;width:100%;max-height:80vh;overflow-y:auto;position:relative}
+.modal-title{font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem;color:var(--ink);margin-bottom:.3rem}
+.modal-badge{margin-bottom:1rem}
+.modal-body{font-size:.87rem;color:var(--ink-muted);line-height:1.75;white-space:pre-wrap;margin-bottom:1.5rem}
+.modal-close{position:absolute;top:1rem;right:1rem;background:var(--surface);border:none;border-radius:8px;width:32px;height:32px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:var(--ink-muted);transition:background .15s}
+.modal-close:hover{background:var(--border-strong)}
 </style>
 </head>
 <body>
 
 <nav>
-  <div class="nav-logo">
-    <span class="nav-logo-dot"></span>
-    HR AI Toolkit
-  </div>
+  <div class="nav-logo"><span class="nav-dot"></span>HR AI Toolkit</div>
   <div class="nav-tabs">
-    <button class="nav-tab active" onclick="showSection('library', this)">Prompt Library</button>
-    <button class="nav-tab" onclick="showSection('builder', this)">Prompt Builder</button>
-    <button class="nav-tab" onclick="showSection('framework', this)">Framework Tool</button>
+    <button class="nav-tab active" onclick="showSection('library',this)">Prompt Library</button>
+    <button class="nav-tab" onclick="showSection('builder',this)">Prompt Builder</button>
+    <button class="nav-tab" onclick="showSection('framework',this)">Framework Tool</button>
   </div>
 </nav>
 
-<!-- ════════════ LIBRARY ════════════ -->
+<!-- ══════════ LIBRARY ══════════ -->
 <div class="section active" id="sec-library">
-
   <div class="hero">
-    <div class="hero-eyebrow"><span class="hero-eyebrow-dot"></span>Ready to use</div>
-    <h1 class="hero-title">40+ prompts for every <em>HR moment</em></h1>
-    <p class="hero-sub">Search, filter, and copy AI-ready prompts covering the full employee lifecycle.</p>
-    <div class="hero-stat-row">
-      <div class="hero-stat">
-        <span class="hero-stat-num">40+</span>
-        <span class="hero-stat-label">Prompts</span>
-      </div>
-      <div class="hero-divider"></div>
-      <div class="hero-stat">
-        <span class="hero-stat-num">8</span>
-        <span class="hero-stat-label">Categories</span>
-      </div>
-      <div class="hero-divider"></div>
-      <div class="hero-stat">
-        <span class="hero-stat-num">0</span>
-        <span class="hero-stat-label">Setup needed</span>
-      </div>
+    <div class="eyebrow"><span class="eyebrow-dot"></span>Ready to use · Copy &amp; go</div>
+    <h1 class="hero-title">80+ prompts for every <em>HR moment</em></h1>
+    <p class="hero-sub">Covering the full employee lifecycle — recruiting, onboarding, performance, engagement, legal, and more. Built for HR professionals in tech, product &amp; outsource companies.</p>
+    <div class="stat-row">
+      <div class="stat"><span class="stat-num">80+</span><span class="stat-lbl">Prompts</span></div>
+      <div class="stat-div"></div>
+      <div class="stat"><span class="stat-num">11</span><span class="stat-lbl">Categories</span></div>
+      <div class="stat-div"></div>
+      <div class="stat"><span class="stat-num">3</span><span class="stat-lbl">Industry focuses</span></div>
+      <div class="stat-div"></div>
+      <div class="stat"><span class="stat-num">0</span><span class="stat-lbl">Setup required</span></div>
     </div>
   </div>
 
-  <div class="search-bar-wrap">
+  <div class="search-wrap">
     <div class="search-bar">
-      <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input type="text" id="prompt-search" placeholder="Search prompts…" oninput="filterPrompts()">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#b0b0b0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="lib-search" placeholder="Search prompts, categories, use cases…" oninput="renderPrompts()">
     </div>
   </div>
 
   <div class="filter-row">
-    <span class="filter-label">Filter</span>
-    <button class="filter-pill active" onclick="setFilter('all', this)">All</button>
-    <button class="filter-pill" onclick="setFilter('Recruiting', this)">Recruiting</button>
-    <button class="filter-pill" onclick="setFilter('Onboarding', this)">Onboarding</button>
-    <button class="filter-pill" onclick="setFilter('Performance', this)">Performance</button>
-    <button class="filter-pill" onclick="setFilter('Engagement', this)">Engagement</button>
-    <button class="filter-pill" onclick="setFilter('Learning', this)">Learning & Dev</button>
-    <button class="filter-pill" onclick="setFilter('Compensation', this)">Compensation</button>
-    <button class="filter-pill" onclick="setFilter('Exit', this)">Exit</button>
-    <button class="filter-pill" onclick="setFilter('LR', this)">Labour Relations</button>
+    <span class="filter-lbl">Category</span>
+    <button class="pill active" onclick="setFilter('all',this)">All</button>
+    <button class="pill" onclick="setFilter('Recruiting',this)">Recruiting</button>
+    <button class="pill" onclick="setFilter('Onboarding',this)">Onboarding</button>
+    <button class="pill" onclick="setFilter('Performance',this)">Performance</button>
+    <button class="pill" onclick="setFilter('Engagement',this)">Engagement</button>
+    <button class="pill" onclick="setFilter('Learning',this)">Learning & Dev</button>
+    <button class="pill" onclick="setFilter('Compensation',this)">Compensation</button>
+    <button class="pill" onclick="setFilter('Exit',this)">Exit</button>
+    <button class="pill" onclick="setFilter('LR',this)">Labour Relations</button>
+    <button class="pill" onclick="setFilter('DEIB',this)">DEIB</button>
+    <button class="pill" onclick="setFilter('Tech',this)">Tech-specific</button>
+    <button class="pill" onclick="setFilter('Wellness',this)">Wellbeing</button>
   </div>
 
-  <div class="prompt-grid" id="prompt-grid"></div>
+  <div class="pg" id="prompt-grid"></div>
 </div>
 
-<!-- ════════════ BUILDER ════════════ -->
+<!-- ══════════ BUILDER ══════════ -->
 <div class="section" id="sec-builder">
-  <div class="builder-wrap">
+<div class="builder-page">
+  <div class="builder-header">
+    <div class="sec-eyebrow">Interactive Prompt Engineering</div>
+    <h2 class="sec-title">Build prompts that actually work</h2>
+    <p class="sec-sub">A step-by-step system that teaches you prompt engineering while you write. Complete each step for a higher-quality, more reliable prompt.</p>
+  </div>
+
+  <div class="steps-nav" id="steps-nav">
+    <button class="step-btn active" onclick="goStep(0,this)" id="sbtn-0"><span class="step-num">1</span>Role &amp; Task</button>
+    <div class="step-sep"></div>
+    <button class="step-btn" onclick="goStep(1,this)" id="sbtn-1"><span class="step-num">2</span>Context</button>
+    <div class="step-sep"></div>
+    <button class="step-btn" onclick="goStep(2,this)" id="sbtn-2"><span class="step-num">3</span>Format</button>
+    <div class="step-sep"></div>
+    <button class="step-btn" onclick="goStep(3,this)" id="sbtn-3"><span class="step-num">4</span>Technique</button>
+    <div class="step-sep"></div>
+    <button class="step-btn" onclick="goStep(4,this)" id="sbtn-4"><span class="step-num">5</span>Tone &amp; Output</button>
+  </div>
+
+  <div class="builder-layout">
     <div>
-      <div class="section-header">
-        <div class="section-eyebrow">Prompt Engineering</div>
-        <h2 class="section-title">Build better prompts</h2>
-        <p class="section-sub">Fill in the ingredients and watch your prompt come together in real time.</p>
+      <!-- STEP 0: Role & Task -->
+      <div class="step-panel active" id="sp-0">
+        <div class="tip-box">
+          <div class="tip-box-title">💡 Why this matters</div>
+          <ul>
+            <li>Giving the AI a <strong>role</strong> ("Act as a senior recruiter…") frames its expertise and voice.</li>
+            <li>A clear <strong>task</strong> defines the deliverable — be specific about what you want, not how to do it.</li>
+            <li>The more precise the task, the less the AI needs to guess.</li>
+          </ul>
+        </div>
+        <div class="field-grp">
+          <label class="field-lbl">AI Role <span class="field-tip">Who should the AI be?</span></label>
+          <input class="fi" id="b-role" placeholder="e.g. Senior HR Business Partner with 10 years in tech" oninput="buildPrompt()">
+          <span class="field-why">Sets the expertise lens. Try: "Experienced L&D Manager", "Employment lawyer", "DEI specialist", "Tech recruiter"</span>
+        </div>
+        <div class="field-grp">
+          <label class="field-lbl">Task / Goal <span class="field-tip">What should it do?</span></label>
+          <textarea class="ft" id="b-task" placeholder="e.g. Write a structured 30-60-90 day onboarding plan for a new Backend Engineer joining a 50-person product startup" oninput="buildPrompt()"></textarea>
+          <span class="field-why">Start with a verb: Write, Design, Analyse, Create, Summarise, Generate, Review, Draft…</span>
+        </div>
+        <div class="step-nav-btns">
+          <span></span>
+          <button class="btn-next" onclick="goStep(1,document.getElementById('sbtn-1'))">Next: Add Context →</button>
+        </div>
       </div>
 
-      <div class="builder-fields">
-        <div class="field-group">
-          <label class="field-label">Role <span class="field-label-badge">Who should the AI act as?</span></label>
-          <input class="field-input" id="b-role" placeholder="e.g. Senior HR Business Partner" oninput="buildPrompt()">
+      <!-- STEP 1: Context -->
+      <div class="step-panel" id="sp-1">
+        <div class="tip-box">
+          <div class="tip-box-title">💡 Why this matters</div>
+          <ul>
+            <li><strong>Context</strong> is the single biggest driver of prompt quality. Without it, the AI makes assumptions.</li>
+            <li>Think: company size, industry, culture, remote/hybrid, team dynamics, any constraints.</li>
+            <li>The more relevant background you add, the more tailored the output.</li>
+          </ul>
         </div>
-        <div class="field-group">
-          <label class="field-label">Task <span class="field-label-badge">What to do?</span></label>
-          <textarea class="field-textarea" id="b-task" placeholder="e.g. Write a structured 30-60-90 day plan for a new Sales Manager" oninput="buildPrompt()"></textarea>
+        <div class="field-grp">
+          <label class="field-lbl">Company / Team Context</label>
+          <textarea class="ft" id="b-context" placeholder="e.g. 200-person remote-first SaaS company, engineering-heavy culture, recently Series B funded, fast growth — hiring 40 people this quarter" oninput="buildPrompt()"></textarea>
+          <span class="field-why">Include: company size, industry, stage, culture, remote/hybrid, team structure</span>
         </div>
-        <div class="field-group">
-          <label class="field-label">Context <span class="field-label-badge">Background info</span></label>
-          <textarea class="field-textarea" id="b-context" placeholder="e.g. Mid-sized SaaS company, 200 employees, fully remote" oninput="buildPrompt()"></textarea>
+        <div class="field-grp">
+          <label class="field-lbl">Specific Constraints or Must-Knows</label>
+          <textarea class="ft" id="b-constraints" placeholder="e.g. Must comply with Ukrainian labour law. Avoid jargon. Manager is new — needs clear, simple language. Budget is limited." oninput="buildPrompt()"></textarea>
+          <span class="field-why">Legal constraints, budget, cultural sensitivities, audience skill level…</span>
         </div>
-        <div class="field-group">
-          <label class="field-label">Format</label>
-          <input class="field-input" id="b-format" placeholder="e.g. Structured plan with weekly milestones" oninput="buildPrompt()">
+        <div class="field-grp">
+          <label class="field-lbl">Examples or Reference (optional)</label>
+          <textarea class="ft" id="b-examples" placeholder="e.g. Output should look like: [paste example] — or — Here's a previous version that needs improvement: [paste]" oninput="buildPrompt()"></textarea>
+          <span class="field-why">Few-shot examples dramatically improve output quality</span>
         </div>
-        <div class="field-group">
-          <label class="field-label">Tone</label>
-          <select class="field-select" id="b-tone" onchange="buildPrompt()">
-            <option value="">— Choose a tone —</option>
-            <option>Professional</option>
-            <option>Empathetic</option>
-            <option>Concise & direct</option>
-            <option>Formal</option>
-            <option>Encouraging</option>
-            <option>Neutral & objective</option>
+        <div class="step-nav-btns">
+          <button class="btn-back" onclick="goStep(0,document.getElementById('sbtn-0'))">← Back</button>
+          <button class="btn-next" onclick="goStep(2,document.getElementById('sbtn-2'))">Next: Set Format →</button>
+        </div>
+      </div>
+
+      <!-- STEP 2: Format -->
+      <div class="step-panel" id="sp-2">
+        <div class="tip-box">
+          <div class="tip-box-title">💡 Why this matters</div>
+          <ul>
+            <li>Without format instructions, AI defaults to essay-style text — often not what HR needs.</li>
+            <li>Specifying structure (table, bullets, numbered list, template) saves significant editing time.</li>
+            <li>Specify length too — "under 200 words" or "2-3 paragraphs" gives tighter outputs.</li>
+          </ul>
+        </div>
+        <div class="field-grp">
+          <label class="field-lbl">Output Format</label>
+          <select class="fs" id="b-format" onchange="buildPrompt()">
+            <option value="">— Choose output structure —</option>
+            <option>Structured table with columns</option>
+            <option>Numbered list with sub-points</option>
+            <option>Bullet-point summary</option>
+            <option>Professional email / letter</option>
+            <option>Step-by-step plan</option>
+            <option>Interview script with questions &amp; follow-ups</option>
+            <option>Policy document with sections</option>
+            <option>Executive summary (1 page)</option>
+            <option>Template with placeholder fields</option>
+            <option>Pros and cons comparison</option>
+            <option>Timeline / roadmap</option>
+            <option>FAQ format</option>
+            <option>Free prose (paragraph form)</option>
           </select>
         </div>
-        <div class="field-group">
-          <label class="field-label">Examples</label>
-          <textarea class="field-textarea" id="b-examples" placeholder="e.g. Sample format or reference output…" oninput="buildPrompt()"></textarea>
+        <div class="field-grp">
+          <label class="field-lbl">Length / Scope</label>
+          <select class="fs" id="b-length" onchange="buildPrompt()">
+            <option value="">— Target length —</option>
+            <option>Very concise (under 100 words)</option>
+            <option>Short (100–200 words)</option>
+            <option>Medium (200–400 words)</option>
+            <option>Detailed (400–700 words)</option>
+            <option>Comprehensive (700+ words, full document)</option>
+            <option>One page</option>
+            <option>Two pages max</option>
+          </select>
         </div>
-
-        <div class="builder-score-ring">
-          <div class="ring-wrap">
-            <svg width="60" height="60" viewBox="0 0 60 60">
-              <circle cx="30" cy="30" r="24" fill="none" stroke="#f0eeea" stroke-width="6"/>
-              <circle id="score-ring" cx="30" cy="30" r="24" fill="none" stroke="#ff4d2e" stroke-width="6"
-                stroke-dasharray="150.8" stroke-dashoffset="150.8" stroke-linecap="round" style="transition:stroke-dashoffset 0.4s ease"/>
-            </svg>
-            <div class="ring-score" id="score-num">0</div>
-          </div>
-          <div>
-            <div class="score-label" id="score-label">Prompt Score</div>
-            <div class="score-desc" id="score-desc">Fill in fields to build your prompt.</div>
-          </div>
+        <div class="field-grp">
+          <label class="field-lbl">Specific Sections to Include (optional)</label>
+          <input class="fi" id="b-sections" placeholder="e.g. Summary, Key Strengths, Areas for Development, Action Plan, Timeline" oninput="buildPrompt()">
+        </div>
+        <div class="step-nav-btns">
+          <button class="btn-back" onclick="goStep(1,document.getElementById('sbtn-1'))">← Back</button>
+          <button class="btn-next" onclick="goStep(3,document.getElementById('sbtn-3'))">Next: Choose Technique →</button>
         </div>
       </div>
 
-      <div style="margin-top:2rem">
-        <div class="section-eyebrow" style="margin-bottom:1rem">Prompt Patterns</div>
-        <div style="display:flex;flex-direction:column;gap:10px">
-          <div class="pattern-card" style="padding:1rem 1.2rem;flex-direction:row;align-items:flex-start;gap:12px">
-            <div class="pattern-icon-wrap" style="background:#fff0ed;color:#ff4d2e;flex-shrink:0">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-            </div>
-            <div>
-              <div class="pattern-title" style="font-size:.9rem">Chain-of-Thought</div>
-              <div class="pattern-desc" style="font-size:.8rem">Ask the AI to reason step-by-step before giving a final answer.</div>
-              <button onclick="injectPattern('cot')" style="margin-top:8px;font-size:.75rem;padding:4px 12px;border:1px solid #ddd;border-radius:8px;background:white;cursor:pointer;font-family:inherit">Insert pattern ↗</button>
-            </div>
-          </div>
-          <div class="pattern-card" style="padding:1rem 1.2rem;flex-direction:row;align-items:flex-start;gap:12px">
-            <div class="pattern-icon-wrap" style="background:#e8f4fe;color:#1565c0;flex-shrink:0">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-            </div>
-            <div>
-              <div class="pattern-title" style="font-size:.9rem">Few-Shot Examples</div>
-              <div class="pattern-desc" style="font-size:.8rem">Provide examples of the desired input/output format for the AI to follow.</div>
-              <button onclick="injectPattern('fewshot')" style="margin-top:8px;font-size:.75rem;padding:4px 12px;border:1px solid #ddd;border-radius:8px;background:white;cursor:pointer;font-family:inherit">Insert pattern ↗</button>
-            </div>
-          </div>
-          <div class="pattern-card" style="padding:1rem 1.2rem;flex-direction:row;align-items:flex-start;gap:12px">
-            <div class="pattern-icon-wrap" style="background:#e8ffe8;color:#1b6b3a;flex-shrink:0">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-            </div>
-            <div>
-              <div class="pattern-title" style="font-size:.9rem">Structured Output</div>
-              <div class="pattern-desc" style="font-size:.8rem">Tell the AI exactly what format and sections you want in the response.</div>
-              <button onclick="injectPattern('structured')" style="margin-top:8px;font-size:.75rem;padding:4px 12px;border:1px solid #ddd;border-radius:8px;background:white;cursor:pointer;font-family:inherit">Insert pattern ↗</button>
-            </div>
-          </div>
+      <!-- STEP 3: Technique -->
+      <div class="step-panel" id="sp-3">
+        <div class="tip-box">
+          <div class="tip-box-title">💡 Why this matters</div>
+          <ul>
+            <li>Prompting <strong>techniques</strong> are proven patterns that shape how AI thinks through a problem.</li>
+            <li>Chain-of-thought makes it reason carefully. Few-shot shows it the format. Role-play deepens perspective.</li>
+            <li>Pick the technique that matches your task — or stack two for complex outputs.</li>
+          </ul>
         </div>
+        <div class="technique-grid" id="tech-grid">
+          <!-- filled by JS -->
+        </div>
+        <div class="field-grp" style="margin-top:8px">
+          <label class="field-lbl">Technique preview</label>
+          <div class="fi" id="tech-preview" style="min-height:70px;font-size:.8rem;color:var(--ink-muted);line-height:1.6;background:var(--surface);border-style:dashed">Select a technique above to see how it will be added to your prompt.</div>
+        </div>
+        <div class="step-nav-btns">
+          <button class="btn-back" onclick="goStep(2,document.getElementById('sbtn-2'))">← Back</button>
+          <button class="btn-next" onclick="goStep(4,document.getElementById('sbtn-4'))">Next: Tone &amp; Finish →</button>
+        </div>
+      </div>
+
+      <!-- STEP 4: Tone & Output -->
+      <div class="step-panel" id="sp-4">
+        <div class="tip-box">
+          <div class="tip-box-title">💡 Final polish</div>
+          <ul>
+            <li>Tone shapes the <strong>voice and register</strong> of the AI's output — critical for HR communications.</li>
+            <li>Specifying the audience helps the AI calibrate vocabulary and depth.</li>
+            <li>Your prompt is now complete — review the preview, adjust, then copy.</li>
+          </ul>
+        </div>
+        <div class="field-grp">
+          <label class="field-lbl">Tone / Voice</label>
+          <select class="fs" id="b-tone" onchange="buildPrompt()">
+            <option value="">— Choose tone —</option>
+            <option>Professional &amp; formal</option>
+            <option>Warm &amp; empathetic</option>
+            <option>Concise &amp; direct</option>
+            <option>Encouraging &amp; motivational</option>
+            <option>Neutral &amp; objective</option>
+            <option>Legal &amp; precise</option>
+            <option>Casual &amp; conversational</option>
+            <option>Data-driven &amp; analytical</option>
+            <option>Coaching &amp; developmental</option>
+          </select>
+        </div>
+        <div class="field-grp">
+          <label class="field-lbl">Target Audience</label>
+          <input class="fi" id="b-audience" placeholder="e.g. HR Director, first-time manager, all employees, C-suite" oninput="buildPrompt()">
+        </div>
+        <div class="field-grp">
+          <label class="field-lbl">What to Avoid</label>
+          <input class="fi" id="b-avoid" placeholder="e.g. jargon, bullet points, legal language, gendered pronouns, names" oninput="buildPrompt()">
+          <span class="field-why">Negative constraints are often as powerful as positive ones</span>
+        </div>
+        <div class="step-nav-btns">
+          <button class="btn-back" onclick="goStep(3,document.getElementById('sbtn-3'))">← Back</button>
+          <button class="btn-next" style="background:var(--accent3)" onclick="copyBuilderPrompt()">✓ Copy Final Prompt</button>
+        </div>
+      </div>
+
+      <!-- PATTERNS -->
+      <div class="patterns-section">
+        <div class="patterns-title">Quick-insert prompt patterns</div>
+        <div class="pattern-cards" id="pat-cards"></div>
       </div>
     </div>
 
+    <!-- RIGHT PANEL -->
     <div>
-      <div class="prompt-output-card">
-        <div class="output-label">Live Preview</div>
-        <div class="output-text" id="prompt-preview"><span class="output-placeholder">Your prompt will appear here as you fill in the fields…</span></div>
-        <div class="output-actions">
-          <button class="btn-primary" id="copy-builder-btn" onclick="copyBuilderPrompt()">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      <!-- SCORE -->
+      <div class="score-panel">
+        <div class="score-header">
+          <div class="score-ring-wrap">
+            <svg width="70" height="70" viewBox="0 0 70 70">
+              <circle cx="35" cy="35" r="28" fill="none" stroke="#f0eeea" stroke-width="7"/>
+              <circle id="score-ring" cx="35" cy="35" r="28" fill="none" stroke="#ff4d2e" stroke-width="7" stroke-dasharray="175.9" stroke-dashoffset="175.9" stroke-linecap="round" style="transition:stroke-dashoffset .4s ease,stroke .4s ease"/>
+            </svg>
+            <div class="score-num" id="score-num">0</div>
+          </div>
+          <div>
+            <div class="score-label" id="score-label">Prompt Score</div>
+            <div class="score-desc" id="score-desc">Fill in the steps to build your prompt.</div>
+          </div>
+        </div>
+        <div class="score-bars" id="score-bars">
+          <div class="score-bar-row"><span class="score-bar-lbl">Role clarity</span><div class="score-bar-track"><div class="score-bar-fill" id="sb-role" style="width:0%"></div></div><span class="score-bar-val" id="sv-role">0</span></div>
+          <div class="score-bar-row"><span class="score-bar-lbl">Task specificity</span><div class="score-bar-track"><div class="score-bar-fill" id="sb-task" style="width:0%"></div></div><span class="score-bar-val" id="sv-task">0</span></div>
+          <div class="score-bar-row"><span class="score-bar-lbl">Context depth</span><div class="score-bar-track"><div class="score-bar-fill" id="sb-ctx" style="width:0%"></div></div><span class="score-bar-val" id="sv-ctx">0</span></div>
+          <div class="score-bar-row"><span class="score-bar-lbl">Format clarity</span><div class="score-bar-track"><div class="score-bar-fill green" id="sb-fmt" style="width:0%"></div></div><span class="score-bar-val" id="sv-fmt">0</span></div>
+          <div class="score-bar-row"><span class="score-bar-lbl">Technique</span><div class="score-bar-track"><div class="score-bar-fill green" id="sb-tech" style="width:0%"></div></div><span class="score-bar-val" id="sv-tech">0</span></div>
+          <div class="score-bar-row"><span class="score-bar-lbl">Tone &amp; polish</span><div class="score-bar-track"><div class="score-bar-fill green" id="sb-tone" style="width:0%"></div></div><span class="score-bar-val" id="sv-tone">0</span></div>
+        </div>
+      </div>
+
+      <!-- OUTPUT -->
+      <div class="output-card">
+        <div class="out-label">Live Prompt Preview</div>
+        <div class="out-text" id="prompt-preview"><span class="out-placeholder">Your prompt builds here as you fill in the steps…</span></div>
+        <div class="out-word-count" id="word-count"></div>
+        <div class="out-actions">
+          <button class="btn-primary" onclick="copyBuilderPrompt()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
             Copy Prompt
           </button>
           <button class="btn-ghost" onclick="clearBuilder()">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.09"/></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.09"/></svg>
             Clear All
           </button>
         </div>
@@ -636,351 +512,530 @@
     </div>
   </div>
 </div>
+</div>
 
-<!-- ════════════ FRAMEWORK ════════════ -->
+<!-- ══════════ FRAMEWORK ══════════ -->
 <div class="section" id="sec-framework">
-  <div class="framework-wrap">
-    <div class="framework-nav" id="fw-nav">
-      <div class="section-eyebrow" style="margin-bottom:0.5rem;padding-left:4px">HR Tasks</div>
-    </div>
-    <div id="fw-panels"></div>
+<div class="fw-page">
+  <div class="fw-nav" id="fw-nav">
+    <div class="fw-nav-lbl">HR Tasks</div>
+  </div>
+  <div id="fw-panels"></div>
+</div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-badge" id="modal-badge"></div>
+    <div class="modal-title" id="modal-title"></div>
+    <div class="modal-body" id="modal-body"></div>
+    <button class="btn-primary" onclick="copyModal()" style="align-self:flex-start">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      Copy prompt
+    </button>
   </div>
 </div>
 
 <div class="toast" id="toast">Copied to clipboard!</div>
 
 <script>
-// ─── DATA ───────────────────────────────────────────
+// ══════════════════════════════════════════════
+// DATA — PROMPTS
+// ══════════════════════════════════════════════
 const PROMPTS = [
-  { cat: 'Recruiting', title: 'Job Description Writer', text: 'Act as an expert HR copywriter. Write a compelling, inclusive job description for a [JOB TITLE] role at [COMPANY NAME], a [INDUSTRY] company. Include: role overview (2-3 sentences), key responsibilities (6-8 bullets), must-have qualifications, nice-to-have skills, and a closing paragraph about the company culture. Use gender-neutral language and avoid jargon.' },
-  { cat: 'Recruiting', title: 'Interview Question Generator', text: 'You are a senior recruiter. Generate 10 behavioural interview questions for a [JOB TITLE] position. For each question, include: the competency it tests, a follow-up probe, and what a strong answer looks like. Format as a numbered list.' },
-  { cat: 'Recruiting', title: 'Candidate Shortlisting Summary', text: 'Act as an HR analyst. Review the following [N] candidate profiles for the [ROLE] position and produce a shortlisting summary table with columns: Candidate Name, Key Strengths, Key Gaps, Overall Fit (Strong/Moderate/Weak), Recommended Next Step. Then provide a 3-sentence hiring recommendation.' },
-  { cat: 'Recruiting', title: 'Rejection Email (Post-Interview)', text: 'Write a warm, professional rejection email to a candidate who interviewed for [ROLE] but was not selected. The email should: thank them for their time, give one genuine positive note, decline without stating the reason, and encourage future applications. Keep it under 150 words.' },
-  { cat: 'Recruiting', title: 'Sourcing Boolean String Builder', text: 'Create a LinkedIn Boolean search string to find candidates for a [ROLE] with experience in [SKILLS]. Include OR variants for job titles, AND operators for must-have skills, and NOT operators to exclude irrelevant profiles. Provide 2 alternative strings of varying specificity.' },
-  { cat: 'Onboarding', title: '30-60-90 Day Plan', text: 'Act as a strategic HR Business Partner. Create a detailed 30-60-90 day onboarding plan for a [JOB TITLE] joining [COMPANY NAME]. For each phase include: primary goals, key activities, success metrics, stakeholders to meet, and deliverables. Format as a clear table.' },
-  { cat: 'Onboarding', title: 'Welcome Email Template', text: 'Write a warm, professional welcome email from the manager to a new [JOB TITLE] starting on [DATE]. Include: a genuine welcome message, first-day logistics (start time, who to ask for, dress code), 3 things to read before day 1, and an encouraging close. Tone: friendly and human.' },
-  { cat: 'Onboarding', title: 'Buddy Programme Brief', text: 'Create a one-page brief for an onboarding buddy programme at [COMPANY]. Include: programme purpose, buddy selection criteria, responsibilities for the first 90 days (weekly check-ins, culture tips, practical help), what to avoid, and success measures.' },
-  { cat: 'Performance', title: 'Constructive Feedback Writer', text: 'Act as an experienced people manager. Write constructive feedback for an employee in the following situation: [DESCRIBE BEHAVIOUR/SITUATION]. The feedback should follow the SBI model (Situation, Behaviour, Impact), be specific and non-judgmental, and end with a clear request for change or improvement. Keep to 150-200 words.' },
-  { cat: 'Performance', title: 'PIP (Performance Improvement Plan)', text: 'Create a structured Performance Improvement Plan for an employee in a [ROLE] who is underperforming in [SPECIFIC AREAS]. Include: current performance gaps with examples, SMART improvement objectives, support and resources provided, review milestones (2 weeks, 4 weeks, 8 weeks), and consequences if targets are not met.' },
-  { cat: 'Performance', title: 'Review Summary Writer', text: 'Act as an HR specialist. Summarise the following performance review data into a clear, balanced written summary of 200-250 words: [PASTE REVIEW NOTES]. Include: key achievements, areas for development, overall rating rationale, and recommended development focus for the next period.' },
-  { cat: 'Performance', title: 'Goal Setting Facilitation', text: 'You are an OKR coach. Help a [JOB TITLE] set 3-5 SMART goals for the next quarter. Their role focus areas are [AREAS]. For each goal, generate: the objective, 2-3 measurable key results, a baseline, and a stretch target. Present in a clean table format.' },
-  { cat: 'Engagement', title: 'Survey Question Designer', text: 'Act as an organisational psychologist. Design a 10-question employee engagement survey for [COMPANY]. Cover: job satisfaction, manager effectiveness, growth opportunities, DEI, and wellbeing. For each question, provide: the question text (Likert scale 1-5), one optional free-text follow-up, and the engagement driver it measures.' },
-  { cat: 'Engagement', title: 'Focus Group Discussion Guide', text: 'Create a 60-minute focus group discussion guide for HR to run with employees on the topic of [TOPIC, e.g. hybrid working]. Include: opening icebreaker, 5-6 core discussion questions, 2 probing follow-ups per question, a closing reflection activity, and a facilitator debrief checklist.' },
-  { cat: 'Engagement', title: 'Stay Interview Script', text: 'Write a structured stay interview script for managers to use with high-potential employees. Include 8 open-ended questions covering: what keeps them engaged, what would make them consider leaving, career aspirations, team dynamics, and manager relationship. Include listening cues and suggested follow-ups.' },
-  { cat: 'Engagement', title: 'Recognition Programme Design', text: 'Design a peer-to-peer recognition programme for a company of [SIZE] employees with a budget of [BUDGET]. Include: programme name concept, nomination criteria, reward options, frequency and ceremony format, communication plan, and how to measure impact.' },
-  { cat: 'Learning', title: 'Training Needs Analysis Template', text: 'Act as an L&D specialist. Create a Training Needs Analysis framework for a [TEAM/DEPARTMENT] of [SIZE] people. Include: skills gap assessment matrix (current vs required), priority scoring (impact × urgency), recommended learning interventions for each gap, and a quarterly learning roadmap.' },
-  { cat: 'Learning', title: 'Learning Objectives Writer', text: 'Write 5 measurable learning objectives for a training session on [TOPIC] aimed at [AUDIENCE LEVEL]. Use Bloom\'s Taxonomy verbs. For each objective include: the verb, behaviour, condition, and standard. Then suggest one assessment method per objective.' },
-  { cat: 'Learning', title: 'Microlearning Content Planner', text: 'Create a microlearning content plan for [TOPIC] to be delivered over 4 weeks. Each week: 1 short video concept (90 seconds), 1 infographic idea, 1 quiz question with answer options, and 1 real-world practice challenge. Keep each element under 5 minutes to complete.' },
-  { cat: 'Compensation', title: 'Salary Band Framework', text: 'Act as a total rewards specialist. Create a salary banding framework for [JOB FAMILY] roles across 4 levels (Junior, Mid, Senior, Lead) in [LOCATION/MARKET]. For each level include: band minimum/midpoint/maximum (use market data context I provide), key differentiators between levels, and a brief rationale.' },
-  { cat: 'Compensation', title: 'Pay Equity Analysis Summary', text: 'You are an HR data analyst. Summarise the following pay equity data and identify any statistically significant gaps: [PASTE DATA]. Provide: a plain-English summary of findings, groups with potential inequity, likely explanatory factors, and 3 recommended corrective actions with priority rating.' },
-  { cat: 'Exit', title: 'Exit Interview Script', text: 'Create a 45-minute exit interview script for HR to use with departing employees. Include 12 questions covering: reasons for leaving, manager relationship, company culture, growth opportunities, compensation, and suggestions for improvement. Include a rating scale section and open feedback prompts. End with a graceful close.' },
-  { cat: 'Exit', title: 'Offboarding Checklist', text: 'Create a comprehensive offboarding checklist for a [ROLE] leaving [COMPANY]. Include tasks for: IT (access revocation, equipment return), HR (final payroll, benefits, documentation), the manager (knowledge transfer, handover plan), and the employee (farewell communications). Format as a timeline (final day, final week, 30 days post-departure).' },
-  { cat: 'Exit', title: 'Turnover Analysis Report', text: 'Act as an HR analyst. Analyse the following turnover data for [PERIOD] and produce an executive summary: [PASTE DATA]. Include: overall turnover rate, breakdown by department/tenure/level, top exit reasons, cost estimate (using 1.5x salary formula), and 3 targeted retention recommendations.' },
-  { cat: 'LR', title: 'Disciplinary Outcome Letter', text: 'Draft a formal disciplinary outcome letter for an employee who has received a [VERBAL/WRITTEN/FINAL] warning following an investigation into [ISSUE]. Include: summary of findings, the decision and its rationale, specific expectations going forward, review period, consequences of further breach, and right of appeal. Use formal but fair language.' },
-  { cat: 'LR', title: 'Grievance Acknowledgement Letter', text: 'Write a formal grievance acknowledgement letter to an employee who has raised a grievance about [GENERAL TOPIC]. Include: confirmation of receipt, the process that will be followed, timelines, who will investigate, their right to be accompanied, and a supportive closing. Keep to one page.' },
-  { cat: 'LR', title: 'Policy Summary Simplifier', text: 'Act as an HR communications specialist. Take the following HR policy and rewrite it as a plain-English summary for employees. Use: short sentences, bullet points for key rules, a Q&A section with 5 likely employee questions, and a "What this means for you" closing paragraph. Target reading age: 14. [PASTE POLICY TEXT]' },
-  { cat: 'Recruiting', title: 'Offer Letter Template', text: 'Draft a professional, warm offer letter for a [JOB TITLE] position at [COMPANY]. Include: congratulatory opening, role details (title, start date, salary, location, reporting line), key benefits summary, conditions of employment, acceptance deadline, and a genuine expression of excitement about them joining.' },
-  { cat: 'Onboarding', title: 'Onboarding Survey Designer', text: 'Design a 5-question pulse survey for new hires at the 30-day mark. Each question should measure a different onboarding dimension: clarity of role, quality of induction, social belonging, manager support, and access to tools. Include a Likert scale (1-5) and one open text question.' },
-  { cat: 'Performance', title: 'Calibration Facilitation Guide', text: 'Create a facilitation guide for a 90-minute talent calibration session for [N] managers reviewing [N] employees. Include: pre-work instructions, session agenda, discussion prompts for each rating level, how to handle disagreements, and a post-session action template.' },
-  { cat: 'Engagement', title: 'Culture Audit Framework', text: 'Design a culture audit framework for [COMPANY]. Include: 6 cultural dimensions to assess, data sources for each (survey, interview, observation, document review), a scoring rubric (1-4), and a culture dashboard template. Explain how to interpret the composite score.' },
-  { cat: 'Learning', title: 'Manager Development Programme', text: 'Design a 6-month manager development programme for first-time managers at [COMPANY]. Include: monthly themes, a mix of learning formats (workshop, coaching, peer learning, self-study), assessments, and how success will be measured. Present as a programme overview and monthly planner.' },
-  { cat: 'LR', title: 'Mediation Opening Statement', text: 'Write a neutral, professional opening statement for an HR mediator facilitating a workplace conflict between two employees. The statement should: set the tone (safe, confidential, voluntary), explain the process and ground rules, clarify the mediator\'s role (not judge), and invite both parties to engage constructively.' },
+  // RECRUITING
+  {cat:'Recruiting',industry:'All',title:'Inclusive Job Description Writer',text:`Act as an expert HR copywriter specialising in inclusive hiring. Write a compelling, bias-free job description for a [JOB TITLE] role at [COMPANY — or use "a fast-growing tech company" if confidential].\n\nInclude:\n• Role overview (2–3 sentences, impact-focused)\n• Key responsibilities (6–8 bullets, action verbs)\n• Must-have qualifications (keep this list short — 3–5 items)\n• Nice-to-have skills\n• What we offer (culture, growth, flexibility)\n\nRules: use gender-neutral language, avoid unnecessary degree requirements, focus on what the person will do — not just what they know. Flag any terms that may discourage underrepresented candidates.`},
+  {cat:'Recruiting',industry:'Tech',title:'Technical Role Screening Questions',text:`You are a senior technical recruiter. Generate 8 screening questions for a [ROLE, e.g. Senior Backend Engineer / Product Manager / Data Scientist] role.\n\nFor each question include:\n1. The question itself\n2. What it tests (technical depth, problem-solving, communication, etc.)\n3. A red flag answer and a strong answer example\n4. One follow-up probe\n\nInclude a mix: 3 technical, 3 behavioural, 2 situational. Adjust for a [JUNIOR / MID / SENIOR] level candidate.`},
+  {cat:'Recruiting',industry:'All',title:'Candidate Shortlisting Summary',text:`Act as an HR analyst. Review the following [N] candidate profiles for the [ROLE] position and produce a shortlisting table:\n\nColumns: Candidate (use initials or Candidate A/B/C for confidentiality) | Key Strengths | Key Gaps | Culture Fit Signal | Overall Fit (Strong / Moderate / Weak) | Recommended Next Step\n\nThen: write a 3-sentence hiring recommendation and flag any bias risks in the evaluation process.\n\n[PASTE CANDIDATE NOTES HERE]`},
+  {cat:'Recruiting',industry:'All',title:'Rejection Email (Post-Interview)',text:`Write a warm, professional rejection email to a candidate who interviewed for [ROLE] but was not selected.\n\nRequirements:\n• Thank them genuinely for their time and effort\n• Give one specific positive observation\n• Decline without stating the reason\n• Keep the door open for future opportunities\n• Under 150 words\n• Tone: empathetic, human — not corporate boilerplate\n\nDo not: use phrases like "we've decided to move forward with other candidates" without warmth. Do not invent false reasons.`},
+  {cat:'Recruiting',industry:'Tech',title:'Offer Letter Template',text:`Draft a professional, warm offer letter for a [JOB TITLE] at [COMPANY — or "the company" if confidential].\n\nInclude:\n• Congratulatory opening (genuine, not generic)\n• Role details: title, start date, salary, location/remote policy, reporting line\n• Key benefits (3–4 highlights)\n• Conditions of employment\n• Acceptance deadline\n• Closing that expresses real excitement about them joining\n\nTone: professional but human. Length: 1 page. Format: business letter style.`},
+  {cat:'Recruiting',industry:'All',title:'Interview Scorecard Designer',text:`Design a structured interview scorecard for a [ROLE] position with [N] interview stages.\n\nFor each stage, provide:\n• Competencies to assess (3–4 per stage, no overlap)\n• Scoring rubric (1–4 scale with behavioral anchors for each score)\n• Sample questions (2 per competency)\n• Interviewer guidance notes\n\nInclude a calibration guide at the end: how to aggregate scores, how to handle disagreements, and how to avoid the halo effect.`},
+  {cat:'Recruiting',industry:'Outsource',title:'Mass Recruitment Campaign Planner',text:`Act as a talent acquisition specialist for a high-volume hiring environment. Create a recruitment campaign plan to hire [N] [ROLES] within [TIMEFRAME] for an outsourcing / BPO company.\n\nInclude:\n• Sourcing channel mix (job boards, referrals, agencies, social)\n• Timeline with weekly milestones\n• Screening funnel design (ratios at each stage)\n• Key metrics to track (time-to-hire, cost-per-hire, offer acceptance rate)\n• Candidate experience touchpoints\n• Risk mitigation if targets are missed\n\nAssume the company is growing rapidly and hiring managers have limited time.`},
+  {cat:'Recruiting',industry:'Tech',title:'Employer Brand Messaging',text:`Act as an employer branding specialist. Write employer brand messaging for [COMPANY TYPE — e.g. "a Series A product startup" or "an outsourcing company with 2000 employees"] targeting [CANDIDATE PERSONA, e.g. senior engineers, junior QA testers].\n\nDeliver:\n1. EVP (Employee Value Proposition) — 2 sentences\n2. 3 brand pillars with supporting proof points\n3. LinkedIn "About" section copy (under 300 words)\n4. 5 social media post captions for talent attraction\n5. One honest "what's hard about working here" statement (authenticity builds trust)\n\nTone: authentic, specific, not buzzword-heavy.`},
+
+  // ONBOARDING
+  {cat:'Onboarding',industry:'All',title:'30-60-90 Day Plan',text:`Act as a strategic HR Business Partner. Create a detailed 30-60-90 day onboarding plan for a [JOB TITLE] joining [COMPANY TYPE — e.g. "a remote-first product company of 80 people"].\n\nFor each phase:\n• Primary goals (outcome-focused, not activity-focused)\n• Key activities and weekly structure\n• Stakeholders to meet and why\n• Deliverables / milestones\n• Manager check-in agenda\n• Success metrics (how we'll know this phase went well)\n\nFormat: structured table for overview + short narrative for each phase. Include a note on psychological safety during the first 30 days.`},
+  {cat:'Onboarding',industry:'Tech',title:'Technical Onboarding Checklist',text:`Create a comprehensive technical onboarding checklist for a new [ROLE, e.g. Software Engineer / QA Engineer / Data Analyst] joining a [COMPANY TYPE].\n\nOrganise by:\n• Day 1 (access, tools, intro calls)\n• Week 1 (codebase orientation, first task, pair programming sessions)\n• Month 1 (first PR/contribution, team rituals, architecture understanding)\n\nInclude: tools setup, repo access, documentation to read, key people to meet, definition of "ready to contribute independently".\n\nAlso include a "Done When" column for each item so the new hire can self-assess progress.`},
+  {cat:'Onboarding',industry:'All',title:'Welcome Email from Manager',text:`Write a warm, personal welcome email from a manager to a new [JOB TITLE] starting on [DATE — or "next Monday"].\n\nInclude:\n• Genuine welcome (1–2 sentences, specific to the role/team)\n• First-day logistics: where to go / how to connect (remote), what to expect\n• 3 things to read or watch before Day 1 (or in Week 1)\n• Who they'll meet first\n• One honest, reassuring note about the first week being about listening and learning\n• Warm close\n\nTone: human, warm, specific — not a corporate template. Under 250 words.`},
+  {cat:'Onboarding',industry:'All',title:'Buddy Programme Design',text:`Design a peer buddy programme for new hires at [COMPANY TYPE].\n\nInclude:\n• Programme purpose and expected outcomes\n• Buddy selection criteria (who should NOT be the buddy)\n• Week-by-week guide for the buddy (Weeks 1–8): what to discuss, what to show, what not to do\n• Conversation starters for the first meeting\n• How to handle it if the pairing doesn't work\n• Success metrics\n• Time commitment expectations\n\nAlso include a one-paragraph pitch to encourage senior employees to volunteer as buddies.`},
+  {cat:'Onboarding',industry:'All',title:'30-Day Pulse Survey (New Hire)',text:`Design a 7-question pulse survey for new hires at the 30-day mark.\n\nFor each question:\n• The question (Likert 1–5 or open text)\n• Why we ask it (engagement driver measured)\n• What a low score should trigger (manager alert? HR follow-up?)\n\nDimensions to cover: role clarity, induction quality, social belonging, manager support, tool/resource access, culture fit signal, early intent to stay.\n\nAlso write a short intro message to send with the survey that explains why it's anonymous and how results will be used.`},
+
+  // PERFORMANCE
+  {cat:'Performance',industry:'All',title:'SBI Feedback Writer',text:`Act as an experienced people manager trained in non-violent communication.\n\nWrite constructive feedback for an employee using the SBI (Situation–Behaviour–Impact) framework.\n\nSituation: [DESCRIBE SPECIFIC SITUATION]\nBehaviour: [DESCRIBE OBSERVABLE BEHAVIOUR — what you saw/heard, not interpretation]\nImpact: [DESCRIBE IMPACT ON TEAM / PROJECT / STAKEHOLDERS]\n\nRequirements:\n• Specific, observable, non-judgmental\n• Separate the behaviour from the person\n• End with a clear request for change: "Going forward, I'd like to see…"\n• 150–200 words\n• Tone: direct but respectful, coaching-oriented`},
+  {cat:'Performance',industry:'All',title:'Performance Improvement Plan (PIP)',text:`Create a structured Performance Improvement Plan for an employee in a [ROLE] role who is underperforming in [SPECIFIC AREAS].\n\nInclude:\n• Clear statement of performance gap (with examples, no names needed — use "the employee")\n• SMART improvement objectives (3–5, with measurement method)\n• Support provided (training, coaching, increased check-ins)\n• Review milestones: 2 weeks, 4 weeks, 8 weeks\n• Manager responsibilities during PIP\n• What success looks like\n• Consequences if targets not met\n\nTone: formal but developmental — the goal is improvement, not exit. Format: professional HR document.`},
+  {cat:'Performance',industry:'All',title:'Performance Review Summary',text:`Act as an HR specialist. Write a balanced performance review summary for an employee in a [ROLE] based on the following notes:\n\n[PASTE REVIEW NOTES / RATING DATA]\n\nDeliver:\n• Opening: overall performance narrative (2–3 sentences)\n• Key Achievements: 3 specific, impact-focused highlights\n• Development Areas: 2–3 constructive observations (framed as growth, not criticism)\n• Overall Rating Rationale: 1 paragraph justifying the rating\n• Recommended Development Focus for next period\n\nLength: 250–350 words. Tone: professional, specific, evidence-based — avoid vague praise or criticism.`},
+  {cat:'Performance',industry:'Tech',title:'OKR / Goal Setting Facilitator',text:`You are an OKR coach for a tech company. Help a [JOB TITLE] set meaningful OKRs for [QUARTER/YEAR].\n\nTheir role focus areas: [LIST AREAS]\nTeam / company priorities this quarter: [LIST]\n\nFor each of 3–4 Objectives:\n• State the Objective (inspiring, qualitative)\n• 2–3 Key Results (measurable, time-bound, outcome-focused — not tasks)\n• Baseline (current state)\n• Stretch target\n• Confidence level (50% / 70% / 90%)\n\nFinally: flag any OKRs that are actually tasks masquerading as outcomes, and suggest how to fix them.`},
+  {cat:'Performance',industry:'All',title:'Calibration Facilitation Guide',text:`Create a facilitation guide for a 90-minute talent calibration session where [N] managers will review performance ratings for [N] employees.\n\nInclude:\n• Pre-work instructions (what managers must prepare)\n• Session agenda with timing\n• Discussion prompts for each rating level (Exceeds / Meets / Below)\n• How to handle disagreements between managers\n• Bias check questions (recency bias, halo effect, proximity bias for remote teams)\n• How to document decisions\n• Post-session action owner template\n\nAlso include a facilitator script for opening the session.`},
+  {cat:'Performance',industry:'All',title:'360 Feedback Request Template',text:`Write a professional 360-degree feedback request email from an employee to their colleagues, asking for honest developmental feedback.\n\nThe email should:\n• Explain what 360 feedback is (for those unfamiliar)\n• Clarify that responses are anonymous and developmental — not tied to ratings\n• Ask for feedback on: [3 SPECIFIC COMPETENCIES OR BEHAVIOURS]\n• Give a clear deadline\n• Be under 200 words\n• Tone: genuine, not performative\n\nAlso write 5 open-ended feedback questions that avoid leading the respondent.`},
+
+  // ENGAGEMENT
+  {cat:'Engagement',industry:'All',title:'Engagement Survey Designer',text:`Act as an organisational psychologist. Design a 12-question employee engagement survey for [COMPANY TYPE].\n\nFor each question:\n• Question text (Likert 1–5 or open-ended)\n• Engagement driver it measures\n• Why this question (why not a different one)\n• Potential follow-up if score is low\n\nDimensions: job satisfaction, manager effectiveness, growth opportunities, DEI, wellbeing, psychological safety, communication, recognition.\n\nAlso provide:\n• A short intro message (why we run this, how it's used, who sees it)\n• A recommended cadence (annual vs quarterly pulse)\n• 3 questions to never ask (and why)`},
+  {cat:'Engagement',industry:'All',title:'Focus Group Discussion Guide',text:`Create a 60-minute focus group discussion guide for HR to run with employees on the topic of [TOPIC, e.g. hybrid working experience / reasons for low engagement scores / career growth].\n\nInclude:\n• Facilitator intro script (role, ground rules, confidentiality)\n• Icebreaker activity (5 min)\n• 5–6 core discussion questions (open-ended, neutral, no leading)\n• 2 probing follow-ups per question\n• A closing reflection or vote activity\n• Facilitator debrief checklist (what to capture, what to report)\n• How to handle dominant voices or silence`},
+  {cat:'Engagement',industry:'Tech',title:'Stay Interview Script',text:`Write a structured stay interview script for managers in a tech company to use with high-performing or flight-risk employees.\n\nInclude 10 open-ended questions covering:\n• What energises them at work\n• What would make them consider leaving (ask directly)\n• Manager relationship quality\n• Career growth visibility\n• Team dynamics and psychological safety\n• What would make their work experience better tomorrow\n\nFor each question: add a "why ask this" note and a "good follow-up" probe.\n\nAlso include: how to open the conversation (framing it as caring, not surveillance), and what to do with the information after.`},
+  {cat:'Engagement',industry:'All',title:'Recognition Programme Design',text:`Design a peer-to-peer recognition programme for a company of [SIZE] employees with a monthly budget of [BUDGET — or "a modest budget" if confidential].\n\nInclude:\n• Programme name concept and brief rationale\n• Recognition criteria (what behaviours/values to celebrate)\n• Nomination process (simple — 3 steps max)\n• Reward options for different preferences (experiences, learning, gift cards, time off)\n• Monthly ceremony format (remote-friendly option too)\n• Communication rollout plan\n• How to measure impact (leading and lagging indicators)\n• How to keep it fresh after 6 months`},
+  {cat:'Engagement',industry:'All',title:'Culture Audit Framework',text:`Design a culture audit framework for [COMPANY TYPE].\n\n6 dimensions to assess:\n• Leadership alignment with stated values\n• Psychological safety\n• Inclusion and belonging\n• Communication transparency\n• Recognition and appreciation\n• Growth mindset / learning culture\n\nFor each dimension provide:\n• 2–3 data sources (survey, interview, observation, documents)\n• 3 diagnostic questions\n• Scoring rubric (1–4)\n• Red flags to watch for\n\nAlso include: a culture audit report template and a 90-day action planning guide based on findings.`},
+
+  // LEARNING & DEV
+  {cat:'Learning',industry:'All',title:'Training Needs Analysis',text:`Act as an L&D specialist. Create a Training Needs Analysis (TNA) framework for a [TEAM/DEPARTMENT] of [SIZE] people in a [COMPANY TYPE].\n\nInclude:\n• Skills gap matrix template (current level vs required level vs priority)\n• Data collection methods (survey, manager interview, performance data)\n• Prioritisation scoring: business impact × urgency × feasibility\n• Recommended learning interventions for top 5 gaps (workshop, e-learning, coaching, mentoring, on-the-job)\n• Quarterly L&D roadmap template\n• Budget allocation guidance\n• How to measure learning effectiveness (Kirkpatrick Level 1–4)`},
+  {cat:'Learning',industry:'Tech',title:'Tech Skills Learning Path',text:`Design a 3-month learning path for a [ROLE, e.g. Junior QA Engineer / Product Manager / Data Analyst] to level up in [SKILL AREA, e.g. test automation / product strategy / SQL & data storytelling].\n\nFor each month:\n• Monthly learning objective\n• Weekly breakdown: topic + resource type (video, article, practice task, project)\n• Suggested free resources (with why each was chosen)\n• A practical mini-project to apply the learning\n• Self-assessment checkpoint\n\nEnd with: a capstone project idea and how a manager could assess competency at the end of 3 months.`},
+  {cat:'Learning',industry:'All',title:'Manager Development Programme',text:`Design a 6-month development programme for first-time managers at [COMPANY TYPE].\n\nMonthly themes:\n1. From individual contributor to manager mindset\n2. Giving feedback and having difficult conversations\n3. Running effective 1-on-1s and team meetings\n4. Hiring and onboarding your team\n5. Performance management and recognition\n6. Building psychological safety and inclusion\n\nFor each month: 1 workshop (half-day), 1 peer learning session agenda, 1 self-directed reading, 1 real-world practice challenge, and a reflection prompt. Include a final cohort presentation format.`},
+  {cat:'Learning',industry:'All',title:'Learning Objectives Writer',text:`Write 5 measurable learning objectives for a training session on [TOPIC] aimed at [AUDIENCE, e.g. mid-level managers / all staff / new joiners].\n\nFor each objective:\n• Use Bloom's Taxonomy: specify the level (Remember / Understand / Apply / Analyse / Evaluate / Create)\n• Format: "By the end of this session, participants will be able to [verb + behaviour + condition + standard]"\n• Suggest one assessment method\n• Flag if the objective is realistic within the session time\n\nAlso identify: what knowledge participants need before this session (prerequisites).`},
+
+  // COMPENSATION
+  {cat:'Compensation',industry:'All',title:'Salary Band Framework',text:`Act as a total rewards specialist. Create a salary banding framework for [JOB FAMILY, e.g. Engineering / Sales / Operations] across 4 levels: Junior, Mid, Senior, Lead.\n\nFor each level:\n• Band minimum / midpoint / maximum\n• Key differentiators from the level above/below (scope, autonomy, impact)\n• Typical experience range\n• Market positioning rationale (25th / 50th / 75th percentile)\n\nAlso include:\n• How to handle cases where current salary exceeds the band maximum\n• Annual review cadence recommendation\n• Communication guide for managers explaining bands to their team`},
+  {cat:'Compensation',industry:'Tech',title:'Tech Compensation Benchmarking',text:`Act as a compensation analyst. Create a compensation benchmarking framework for [ROLE FAMILY] roles in the tech industry in [LOCATION / MARKET].\n\nInclude:\n• Which benchmark sources to use and why (Levels.fyi, Radford, local surveys)\n• How to define the peer group (company size, stage, industry, geography)\n• Total compensation components to benchmark: base, bonus, equity, benefits\n• A benchmarking report template\n• How to present findings to leadership without overwhelming them\n• Recommended review frequency`},
+  {cat:'Compensation',industry:'All',title:'Pay Equity Analysis Summary',text:`You are an HR data analyst. Analyse the pay equity data provided and write a clear, actionable report.\n\n[PASTE ANONYMISED DATA — use role level, tenure, department, salary — no names needed]\n\nDeliver:\n• Plain-English summary of findings (what the data shows)\n• Groups with potential pay gaps and likely explanatory factors\n• Statistically significant vs. unexplained gaps\n• 3 recommended corrective actions with priority rating (High/Medium/Low)\n• Communication guidance: what to say to affected employees\n• Risk assessment: what happens if gaps are not addressed`},
+
+  // EXIT
+  {cat:'Exit',industry:'All',title:'Exit Interview Script',text:`Create a structured 45-minute exit interview script for HR to use with departing employees. The interviewer should be senior HR — not the line manager.\n\nInclude 14 questions covering:\n• Primary reason(s) for leaving (ask directly, then probe)\n• Manager relationship\n• Company culture and values alignment\n• Career growth and opportunity\n• Compensation and benefits\n• Team dynamics\n• What would have made them stay\n• Would they recommend working here? Why / why not?\n• What advice would they give to their successor?\n\nInclude: how to open (create safety), how to close (end positively), what NOT to say, and a note-taking template.`},
+  {cat:'Exit',industry:'All',title:'Offboarding Checklist',text:`Create a comprehensive offboarding checklist for a [ROLE] leaving [COMPANY TYPE] with [N WEEKS] notice.\n\nOrganise by stakeholder:\n• IT: access revocation timeline, equipment return, data backup\n• HR: final payroll, benefits, reference policy, documentation sign-off\n• Manager: knowledge transfer plan, handover document template, successor communication\n• Employee: farewell communication guide, LinkedIn recommendation protocol, alumni network invitation\n\nFormat: timeline table (Final Day / Final Week / Day 1 After Departure / 30 Days Post-Departure).\n\nAlso include: a checklist for remote employees and a note on legal obligations.`},
+  {cat:'Exit',industry:'All',title:'Turnover Analysis Report',text:`Act as an HR analyst. Analyse the following turnover data for [PERIOD] and write an executive-ready report.\n\n[PASTE ANONYMISED DATA]\n\nInclude:\n• Overall voluntary turnover rate vs. industry benchmark\n• Breakdown by: department, tenure band, level, reason\n• Cost estimate (use 1.5× annual salary as baseline, flag assumptions)\n• Top 3 exit themes with supporting quotes (anonymised)\n• Root cause hypothesis\n• 3 targeted retention recommendations with effort/impact matrix\n• 90-day action plan with owners\n\nTone: data-driven, objective. Length: 1–2 pages. Format: executive summary + supporting data section.`},
+  {cat:'Exit',industry:'Tech',title:'Knowledge Transfer Template',text:`Create a knowledge transfer document template for a departing [ROLE] in a tech company.\n\nSections:\n• Role overview and key responsibilities (what this person actually did day-to-day)\n• Active projects: status, next steps, key contacts, risks\n• Critical relationships (internal and external stakeholders)\n• Tools and systems used (with access notes)\n• Recurring tasks and ownership (calendar-based)\n• "Only I know this" section: undocumented knowledge, tribal knowledge, workarounds\n• Recommended reading and resources for the successor\n• Open questions / unresolved issues to hand over\n\nAlso include a 4-week handover meeting schedule.`},
+
+  // LABOUR RELATIONS
+  {cat:'LR',industry:'All',title:'Disciplinary Outcome Letter',text:`Draft a formal disciplinary outcome letter for an employee who has received a [VERBAL / WRITTEN / FINAL] warning following a disciplinary investigation into [ISSUE — describe generally, no names].\n\nInclude:\n• Summary of the investigation and findings\n• The decision reached and its rationale\n• Specific behavioural expectations going forward\n• Review period and what happens at the end of it\n• Consequences if the same or similar behaviour recurs\n• Right to appeal (timeframe, to whom)\n\nTone: formal, fair, and measured — not punitive. Format: official HR letter. Use "the employee" or a placeholder — no names.`},
+  {cat:'LR',industry:'All',title:'Grievance Acknowledgement Letter',text:`Write a formal grievance acknowledgement letter to an employee who has raised a grievance about [GENERAL TOPIC — e.g. "interpersonal conflict with a colleague" or "management behaviour"].\n\nInclude:\n• Confirmation of receipt and date\n• Clear explanation of the grievance process and next steps\n• Timelines for each stage\n• Who will investigate (and why it won't be their direct manager)\n• Right to be accompanied at the investigation meeting\n• How confidentiality will be managed\n• A professional, supportive close\n\nLength: 1 page. Tone: formal but not cold.`},
+  {cat:'LR',industry:'All',title:'Plain-English Policy Summary',text:`Act as an HR communications specialist. Take the following HR policy and rewrite it as a clear, plain-English employee guide.\n\n[PASTE POLICY TEXT]\n\nDeliver:\n• One-paragraph summary ("What this policy is about")\n• Key rules in plain language (bullet points)\n• "What this means for you" section (role-specific examples)\n• Common scenarios / FAQ (5 Q&As an employee would actually ask)\n• Where to go for help\n\nTarget reading level: accessible to all employees regardless of educational background.\nRemove: legal jargon, passive voice, unnecessary hedging.\nKeep: the intent and any legally required language (flag what can't be changed).`},
+  {cat:'LR',industry:'All',title:'Mediation Opening Statement',text:`Write a neutral, professional opening statement for an HR mediator facilitating a workplace conflict between two employees.\n\nThe statement should:\n• Set the tone: safe, voluntary, confidential, collaborative\n• Explain the mediator's role (facilitator, not judge — no decision-making power)\n• State the ground rules clearly and simply\n• Acknowledge both parties' willingness to engage\n• Frame the goal as "finding a path forward together" not assigning blame\n• Invite both parties to share their perspective without interruption\n\nLength: 2–3 minutes spoken (approximately 250–350 words). Tone: calm, authoritative, warm.`},
+  {cat:'LR',industry:'All',title:'Redundancy Announcement Script',text:`Write a manager script for announcing a redundancy decision to an affected employee in a private 1:1 meeting.\n\nInclude:\n• Opening: clear, direct — no "preamble" that delays the news\n• The message: the decision, reason (business context, not personal performance), effective date\n• What happens next: notice period, severance, support available\n• Time for the employee to react — how to hold space for emotions\n• What the manager should NOT say (common mistakes)\n• How to close the meeting professionally\n• What to do immediately after (HR next steps)\n\nTone: compassionate but clear. This is one of the most difficult conversations a manager will have — the script should help them do it well.`},
+
+  // DEIB
+  {cat:'DEIB',industry:'All',title:'Inclusive Hiring Audit',text:`Act as a DEI specialist. Conduct a written audit of the following job description and recruitment process description for inclusion risks.\n\n[PASTE JD AND/OR PROCESS DESCRIPTION]\n\nFlag:\n• Language that may signal a preferred "type" (gendered, ageist, culturally coded)\n• Requirements that are unnecessarily exclusionary (degree mandates, years of experience proxies)\n• Gaps in the process that may disadvantage certain groups (e.g. unstructured interviews, lack of anonymisation)\n• Missing inclusive signals (flexible working, parental leave visibility, accessibility statement)\n\nFor each flag: explain the risk and give a rewritten alternative. Rate overall inclusion risk: Low / Medium / High.`},
+  {cat:'DEIB',industry:'All',title:'DEIB Strategy Document',text:`Act as a Chief People Officer. Write a 12-month DEIB (Diversity, Equity, Inclusion & Belonging) strategy for [COMPANY TYPE, e.g. "a 300-person software outsourcing company" — or use "the organisation" if confidential].\n\nInclude:\n• Current state assessment framework (what to measure first)\n• 4 strategic pillars with specific initiatives under each\n• Milestones for Q1–Q4\n• Budget considerations (high/medium/low cost options)\n• Success metrics (quantitative and qualitative)\n• Governance: who owns this, how progress is reported\n• Common pitfalls to avoid in Year 1\n\nTone: strategic, evidence-informed, actionable — not performative.`},
+  {cat:'DEIB',industry:'All',title:'Unconscious Bias Training Outline',text:`Design a 3-hour unconscious bias workshop for [AUDIENCE, e.g. hiring managers / all employees / senior leadership] at [COMPANY TYPE].\n\nInclude:\n• Learning objectives (3–4, Bloom's-aligned)\n• Session flow with timing\n• 2–3 experiential activities (not just lectures) with facilitator notes\n• Scenario discussions relevant to [HR / tech / outsourcing] context\n• Common bias types to cover: affinity, halo, recency, confirmation, attribution\n• How to close: individual commitment exercise\n• Pre-reading suggestions\n• How to measure behaviour change 30 days later\n\nNote: frame as "how our brains work" not "you are biased" — reduces defensiveness.`},
+
+  // TECH-SPECIFIC
+  {cat:'Tech',industry:'Tech',title:'Engineering Team Health Check',text:`Design a quarterly engineering team health check for an engineering manager to run with their team of [SIZE] engineers.\n\nCover 8 dimensions:\n• Technical quality (code review, test coverage, tech debt)\n• Delivery predictability\n• Psychological safety\n• Learning and growth\n• Collaboration and knowledge sharing\n• Manager effectiveness\n• Process clarity\n• Work-life balance\n\nFor each dimension: 2 diagnostic questions, a 1–5 health score, and "what good looks like". Include a retrospective facilitation guide and a quarterly improvement commitment template.`},
+  {cat:'Tech',industry:'Tech',title:'Tech Hiring Manager Training',text:`Create a training guide for hiring managers in a tech company who are new to conducting structured technical interviews.\n\nCover:\n• Why structured interviews outperform unstructured ones (data + intuition)\n• How to avoid the most common hiring biases in tech (brilliant jerk fallacy, pedigree bias, culture "fit" vs culture "add")\n• How to design a technical assessment that tests real job skills\n• How to score candidates consistently\n• How to give feedback after the interview\n• Legal considerations (what not to ask)\n\nFormat: practical guide with examples, not academic. Include a one-page cheat sheet for the interview day itself.`},
+  {cat:'Tech',industry:'Outsource',title:'IT Outsourcing People Risk Assessment',text:`Act as a senior HR Business Partner in an IT outsourcing company. Write a people risk assessment for a new client project team of [SIZE] people, [TIMEFRAME] duration, [LOCATION].\n\nAssess risks across:\n• Talent availability and retention risk\n• Key person dependency\n• Knowledge transfer risk (client-specific knowledge)\n• Burnout and overload risk\n• Cultural misalignment (client vs. company culture)\n• Succession risk for critical roles\n• Legal/compliance risks (contracts, IP, data)\n\nFor each risk: likelihood (High/Med/Low), impact, and mitigation strategy. Format: risk register table + executive narrative.`},
+  {cat:'Tech',industry:'Tech',title:'Remote Team Rituals Playbook',text:`Design a remote team rituals playbook for a fully distributed engineering or product team of [SIZE] people across [N] time zones.\n\nInclude:\n• Weekly rituals (standups, async updates, 1-on-1 cadence)\n• Monthly rituals (team retrospective, learning session, social event)\n• Quarterly rituals (team planning, personal development review)\n• Async communication norms (response times, channel usage, documentation culture)\n• How to build psychological safety in a remote setting\n• Onboarding ritual for new remote team members\n• What NOT to do (common remote team mistakes)\n\nTone: practical, opinionated, based on what actually works — not theory.`},
+
+  // WELLNESS
+  {cat:'Wellness',industry:'All',title:'Burnout Prevention Framework',text:`Act as an occupational health and HR specialist. Create a burnout prevention framework for [COMPANY TYPE].\n\nInclude:\n• Early warning signs checklist (for managers to recognise in their teams)\n• Structural causes of burnout to address at the organisation level\n• Manager behaviours that prevent vs. accelerate burnout\n• 4 initiatives to implement in the next 90 days (with effort/impact rating)\n• A "burnout risk conversation" script for managers\n• Employee self-assessment tool (brief)\n• How to create a culture where people feel safe saying "I'm struggling"\n\nBase recommendations on evidence, not wellness clichés. Avoid: "encourage employees to meditate".`},
+  {cat:'Wellness',industry:'Tech',title:'Mental Health at Work Policy',text:`Draft a progressive, supportive mental health at work policy for [COMPANY TYPE — or "the company"].\n\nSections:\n• Our commitment (values statement — genuine, not PR)\n• What we mean by mental health (normalise the language)\n• Rights and responsibilities (company vs. employee)\n• Support available: EAP, manager conversations, mental health days, flexible working\n• How to request support (clear, low-friction process)\n• Confidentiality guarantee\n• Manager responsibilities\n• Return-to-work support\n\nTone: warm, human, destigmatising. Avoid corporate legal language in the main body — add a legal annexe if needed.`},
 ];
 
-const CATEGORIES = ['all','Recruiting','Onboarding','Performance','Engagement','Learning','Compensation','Exit','LR'];
-const BADGE_MAP = { Recruiting:'badge-recruit', Onboarding:'badge-onboard', Performance:'badge-perf', Engagement:'badge-engage', Exit:'badge-exit', LR:'badge-lr', Learning:'badge-develop', Compensation:'badge-comp' };
-const BADGE_LABELS = { LR:'Labour Relations', Learning:'Learning & Dev' };
+const BADGE_MAP = {Recruiting:'b-r',Onboarding:'b-o',Performance:'b-p',Engagement:'b-e',Exit:'b-ex',LR:'b-lr',Learning:'b-l',Compensation:'b-c',DEIB:'b-d',Tech:'b-t',Wellness:'b-w'};
+const CAT_LABEL = {LR:'Labour Relations',Learning:'Learning & Dev',DEIB:'DEIB',Tech:'Tech-specific',Wellness:'Wellbeing'};
+let activeFilter='all', modalIdx=-1;
 
-let activeFilter = 'all';
-let activeSearch = '';
+function getCatLabel(c){return CAT_LABEL[c]||c}
 
-function getBadge(cat) { return BADGE_MAP[cat] || 'badge-other'; }
-function getCatLabel(cat) { return BADGE_LABELS[cat] || cat; }
-
-function renderPrompts() {
-  const grid = document.getElementById('prompt-grid');
-  const filtered = PROMPTS.filter(p => {
-    const matchCat = activeFilter === 'all' || p.cat === activeFilter;
-    const q = activeSearch.toLowerCase();
-    const matchSearch = !q || p.title.toLowerCase().includes(q) || p.text.toLowerCase().includes(q) || p.cat.toLowerCase().includes(q);
-    return matchCat && matchSearch;
+function renderPrompts(){
+  const q=(document.getElementById('lib-search').value||'').toLowerCase();
+  const grid=document.getElementById('prompt-grid');
+  const filtered=PROMPTS.filter(p=>{
+    const mc=activeFilter==='all'||p.cat===activeFilter||p.industry===activeFilter;
+    const ms=!q||p.title.toLowerCase().includes(q)||p.text.toLowerCase().includes(q)||p.cat.toLowerCase().includes(q)||p.industry.toLowerCase().includes(q);
+    return mc&&ms;
   });
-  if (!filtered.length) {
-    grid.innerHTML = `<div class="no-results"><strong>No prompts found</strong>Try a different search or filter.</div>`;
-    return;
-  }
-  grid.innerHTML = filtered.map((p,i) => `
-    <div class="prompt-card">
-      <div class="prompt-card-top">
-        <div class="prompt-title">${p.title}</div>
-        <span class="prompt-badge ${getBadge(p.cat)}">${getCatLabel(p.cat)}</span>
+  if(!filtered.length){grid.innerHTML='<div class="no-res"><strong>No prompts found</strong>Try a different search or filter.</div>';return;}
+  grid.innerHTML=filtered.map((p,i)=>`
+    <div class="pc">
+      <div class="pc-top">
+        <div class="pc-title">${p.title}</div>
+        <span class="badge ${BADGE_MAP[p.cat]||'b-r'}">${getCatLabel(p.cat)}</span>
       </div>
-      <div class="prompt-preview">${p.text}</div>
-      <div class="prompt-actions">
-        <button class="btn-copy" id="pc-${i}" onclick="copyPrompt(${i}, this)">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-          Copy
-        </button>
+      <div class="pc-prev">${p.text.replace(/\n/g,' ')}</div>
+      <div class="pc-meta">
+        <span class="pc-industry">${p.industry==='All'?'All industries':p.industry+' focus'}</span>
+        <div style="display:flex;gap:6px">
+          <button class="btn-copy" style="background:var(--surface);border-color:var(--border-strong);font-size:.74rem;padding:4px 10px" onclick="openModal(${i})">View</button>
+          <button class="btn-copy" id="pc-${i}" onclick="copyPromptCard(${i},this)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            Copy
+          </button>
+        </div>
       </div>
     </div>
   `).join('');
+  window._filteredPrompts=filtered;
 }
 
-function copyPrompt(i, btn) {
-  const filtered = PROMPTS.filter(p => {
-    const matchCat = activeFilter === 'all' || p.cat === activeFilter;
-    const q = activeSearch.toLowerCase();
-    const matchSearch = !q || p.title.toLowerCase().includes(q) || p.text.toLowerCase().includes(q) || p.cat.toLowerCase().includes(q);
-    return matchCat && matchSearch;
-  });
-  navigator.clipboard.writeText(filtered[i].text);
-  btn.classList.add('copied'); btn.innerHTML = '✓ Copied';
-  setTimeout(() => { btn.classList.remove('copied'); btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy'; }, 2000);
-  showToast();
-}
-
-function setFilter(cat, btn) {
-  activeFilter = cat;
-  document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+function setFilter(cat,btn){
+  activeFilter=cat;
+  document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));
   btn.classList.add('active');
   renderPrompts();
 }
 
-function filterPrompts() {
-  activeSearch = document.getElementById('prompt-search').value;
-  renderPrompts();
-}
-
-// ─── BUILDER ────────────────────────────────────────
-function buildPrompt() {
-  const role = document.getElementById('b-role').value.trim();
-  const task = document.getElementById('b-task').value.trim();
-  const context = document.getElementById('b-context').value.trim();
-  const format = document.getElementById('b-format').value.trim();
-  const tone = document.getElementById('b-tone').value;
-  const examples = document.getElementById('b-examples').value.trim();
-
-  const parts = [];
-  if (role) parts.push(`Act as ${role}.`);
-  if (task) parts.push(task);
-  if (context) parts.push(`Context: ${context}`);
-  if (format) parts.push(`Format: ${format}`);
-  if (examples) parts.push(`Examples for reference:\n${examples}`);
-  if (tone) parts.push(`Use a ${tone.toLowerCase()} tone.`);
-
-  const preview = document.getElementById('prompt-preview');
-  if (!parts.length) {
-    preview.innerHTML = '<span class="output-placeholder">Your prompt will appear here as you fill in the fields…</span>';
-  } else {
-    preview.textContent = parts.join('\n\n');
-  }
-
-  const filled = [role, task, context, format, tone, examples].filter(Boolean).length;
-  const score = Math.round((filled / 6) * 100);
-  document.getElementById('score-num').textContent = score;
-  const circumference = 150.8;
-  document.getElementById('score-ring').style.strokeDashoffset = circumference - (circumference * score / 100);
-  const labels = ['', 'Getting started', 'Taking shape', 'Good foundation', 'Almost there', 'Nearly perfect', 'Excellent prompt!'];
-  const descs = ['Fill in fields to build your prompt.', 'Add more details for a stronger prompt.', 'Nice start — keep going.', 'Good balance of context.', 'Strong prompt — add examples?', 'You\'re prompt-engineering like a pro.', 'This prompt is ready to use.'];
-  const idx = Math.ceil(filled);
-  document.getElementById('score-label').textContent = labels[idx] || 'Excellent prompt!';
-  document.getElementById('score-desc').textContent = descs[idx] || descs[6];
-}
-
-function copyBuilderPrompt() {
-  const text = document.getElementById('prompt-preview').textContent;
-  if (!text || text.includes('Your prompt will appear')) return;
-  navigator.clipboard.writeText(text);
+function copyPromptCard(i,btn){
+  const p=window._filteredPrompts[i];
+  navigator.clipboard.writeText(p.text);
+  btn.classList.add('copied');btn.innerHTML='✓ Copied';
+  setTimeout(()=>{btn.classList.remove('copied');btn.innerHTML='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy';},2000);
   showToast();
 }
 
-function clearBuilder() {
-  ['b-role','b-task','b-context','b-format','b-examples'].forEach(id => document.getElementById(id).value = '');
-  document.getElementById('b-tone').value = '';
+function openModal(i){
+  const p=window._filteredPrompts[i];modalIdx=i;
+  document.getElementById('modal-badge').innerHTML=`<span class="badge ${BADGE_MAP[p.cat]||'b-r'}">${getCatLabel(p.cat)}</span>`;
+  document.getElementById('modal-title').textContent=p.title;
+  document.getElementById('modal-body').textContent=p.text;
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal(){document.getElementById('modal').classList.remove('open')}
+function copyModal(){if(modalIdx<0)return;navigator.clipboard.writeText(window._filteredPrompts[modalIdx].text);showToast();}
+
+// ══════════════════════════════════════════════
+// BUILDER
+// ══════════════════════════════════════════════
+let currentStep=0;
+const TECHNIQUES=[
+  {name:'Chain-of-Thought',icon:'🧠',desc:'Ask AI to reason step-by-step before answering — great for analysis and complex decisions.',snippet:'Think through this step by step before giving your final answer:\n1. First, consider all relevant context.\n2. Identify the key factors.\n3. Weigh the options.\n4. Then give your recommendation with reasoning.'},
+  {name:'Few-Shot Examples',icon:'📋',desc:'Provide 2–3 input/output examples — the AI mirrors the format and quality.',snippet:'Here are examples of the desired format:\nExample 1:\nInput: [situation]\nOutput: [ideal response]\n\nExample 2:\nInput: [situation]\nOutput: [ideal response]\n\nNow apply the same format to my situation.'},
+  {name:'Role-Play Perspective',icon:'🎭',desc:'Ask AI to think from a specific person\'s perspective — deepens empathy and specificity.',snippet:'Before answering, step into the perspective of [a first-time manager / an employee receiving this news / a candidate reading this JD]. Consider what they would feel, need, and worry about. Then craft your response with that perspective in mind.'},
+  {name:'Structured Output',icon:'📐',desc:'Define exact sections and format — eliminates reformatting and guesswork.',snippet:'Provide your response in this exact structure:\n\n## Summary (2–3 sentences)\n## Key Points (3–5 bullets)\n## Recommendations (numbered list)\n## Next Steps (table: Action | Owner | Timeline)\n## Risks to Watch'},
+  {name:'Devil\'s Advocate',icon:'⚖️',desc:'Ask AI to challenge the output — surfaces blind spots before you act.',snippet:'After completing the task, play devil\'s advocate: what are the 3 strongest objections to this approach? What could go wrong? What is this missing?'},
+  {name:'Constraints First',icon:'🚧',desc:'State what NOT to do — often more powerful than saying what to do.',snippet:'Important constraints for this task:\n- Do NOT use [jargon / names / legal language]\n- Do NOT exceed [X words]\n- Do NOT make assumptions about [X]\n- Avoid: [list specific things to avoid]'},
+];
+let selectedTech=null;
+
+function renderTechCards(){
+  const g=document.getElementById('tech-grid');
+  g.innerHTML=TECHNIQUES.map((t,i)=>`
+    <div class="tech-card" onclick="selectTech(${i})" id="tc-${i}">
+      <div class="tech-card-icon">${t.icon}</div>
+      <div class="tech-card-name">${t.name}</div>
+      <div class="tech-card-desc">${t.desc}</div>
+    </div>
+  `).join('');
+}
+
+function selectTech(i){
+  selectedTech=i;
+  document.querySelectorAll('.tech-card').forEach(c=>c.classList.remove('selected'));
+  document.getElementById('tc-'+i).classList.add('selected');
+  document.getElementById('tech-preview').textContent=TECHNIQUES[i].snippet;
   buildPrompt();
 }
 
-const PATTERNS = {
-  cot: 'Think through this step by step:\n1. First, consider the employee\'s context and role.\n2. Then, evaluate the relevant data or situation.\n3. Next, compare against expectations or benchmarks.\n4. Finally, provide your recommendation with clear reasoning.',
-  fewshot: 'Here are examples of the desired format:\nInput: [example situation 1]\nOutput: [example response 1]\n\nInput: [example situation 2]\nOutput: [example response 2]\n\nNow apply the same format to: [your situation]',
-  structured: 'Provide your response in this exact format:\n\n## Summary (2-3 sentences)\n## Key Findings (3 bullet points)\n## Recommendations (numbered list)\n## Next Steps (with owner and due date)'
-};
+function renderPatterns(){
+  const PATS=[
+    {icon:'🔗',bg:'#fff0ed',name:'SBI Feedback',desc:'Situation → Behaviour → Impact — the gold standard for workplace feedback.',snippet:'Structure your response using the SBI model:\n- Situation: [when/where this occurred]\n- Behaviour: [specific observable action — what was seen or heard, not interpreted]\n- Impact: [effect on team/project/stakeholders]\n\nEnd with a clear forward-looking request: "Going forward, I would like to see…"'},
+    {icon:'📊',bg:'#e8f4fe',name:'STAR Method',desc:'Situation, Task, Action, Result — for interview questions and case studies.',snippet:'Frame your response using the STAR method:\n- Situation: context and background\n- Task: what was required\n- Action: what was specifically done\n- Result: measurable outcome\n\nBe specific and quantify results where possible.'},
+    {icon:'🎯',bg:'#e8fef4',name:'SMART Goals',desc:'Force goals to be Specific, Measurable, Achievable, Relevant, Time-bound.',snippet:'Write each goal in SMART format:\n- Specific: what exactly will be achieved?\n- Measurable: how will we know?\n- Achievable: is this realistic given current resources?\n- Relevant: does this connect to the broader priority?\n- Time-bound: by when?'},
+  ];
+  document.getElementById('pat-cards').innerHTML=PATS.map((p,i)=>`
+    <div class="pat-card">
+      <div class="pat-icon" style="background:${p.bg}">${p.icon}</div>
+      <div class="pat-body">
+        <div class="pat-name">${p.name}</div>
+        <div class="pat-desc">${p.desc}</div>
+        <button class="pat-btn" onclick="injectPattern(${i})">Insert into prompt ↗</button>
+      </div>
+    </div>
+  `).join('');
+  window._PATS=PATS;
+}
 
-function injectPattern(key) {
-  const ex = document.getElementById('b-examples');
-  ex.value = (ex.value ? ex.value + '\n\n' : '') + PATTERNS[key];
+function injectPattern(i){
+  const ex=document.getElementById('b-examples');
+  ex.value=(ex.value?ex.value+'\n\n':'')+window._PATS[i].snippet;
+  goStep(1,document.getElementById('sbtn-1'));
   buildPrompt();
 }
 
-// ─── FRAMEWORK ──────────────────────────────────────
-const FRAMEWORKS = [
-  {
-    label: 'Recruiting', emoji: '🎯',
-    badge: 'badge-recruit', badgeLabel: 'Recruiting',
-    fields: [
-      { id: 'fw-rec-role', label: 'Job Title', ph: 'e.g. Senior Data Analyst' },
-      { id: 'fw-rec-co', label: 'Company', ph: 'e.g. Acme Corp, a fintech startup' },
-      { id: 'fw-rec-must', label: 'Must-have requirements', ph: 'e.g. 5+ years SQL, Python, stakeholder management' },
-      { id: 'fw-rec-nice', label: 'Nice-to-have', ph: 'e.g. Tableau, financial services experience' },
-    ],
-    build: f => `Write a compelling, inclusive job description for a ${f[0]} role at ${f[1]}.\n\nMust-have requirements: ${f[2]}\nNice-to-have: ${f[3]}\n\nInclude: a 2-sentence role overview, 6 key responsibilities, qualifications, and a culture-focused closing paragraph. Use gender-neutral language.`
+function goStep(n,btn){
+  currentStep=n;
+  document.querySelectorAll('.step-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('sp-'+n).classList.add('active');
+  document.querySelectorAll('.step-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function getVal(id){return(document.getElementById(id)||{}).value||'';}
+
+function buildPrompt(){
+  const role=getVal('b-role').trim();
+  const task=getVal('b-task').trim();
+  const ctx=getVal('b-context').trim();
+  const constr=getVal('b-constraints').trim();
+  const ex=getVal('b-examples').trim();
+  const fmt=getVal('b-format');
+  const len=getVal('b-length');
+  const secs=getVal('b-sections').trim();
+  const tone=getVal('b-tone');
+  const aud=getVal('b-audience').trim();
+  const avoid=getVal('b-avoid').trim();
+
+  const parts=[];
+  if(role) parts.push(`Act as ${role}.`);
+  if(task) parts.push(task);
+  if(ctx) parts.push(`Context: ${ctx}`);
+  if(constr) parts.push(`Constraints: ${constr}`);
+  if(ex) parts.push(`Reference / examples:\n${ex}`);
+  if(selectedTech!==null) parts.push(TECHNIQUES[selectedTech].snippet);
+  if(fmt) parts.push(`Format: ${fmt}`);
+  if(len) parts.push(`Length: ${len}`);
+  if(secs) parts.push(`Include these sections: ${secs}`);
+  if(tone) parts.push(`Tone: ${tone}`);
+  if(aud) parts.push(`Audience: ${aud}`);
+  if(avoid) parts.push(`Do not include: ${avoid}`);
+
+  const preview=document.getElementById('prompt-preview');
+  if(!parts.length){
+    preview.innerHTML='<span class="out-placeholder">Your prompt builds here as you fill in the steps…</span>';
+    document.getElementById('word-count').textContent='';
+  } else {
+    const txt=parts.join('\n\n');
+    preview.textContent=txt;
+    const wc=txt.trim().split(/\s+/).filter(Boolean).length;
+    document.getElementById('word-count').textContent=wc+' words';
+  }
+
+  // SCORE
+  const roleScore=role.length>10?100:role.length*10;
+  const taskScore=task.length>30?100:task.length>10?60:task.length>0?30:0;
+  const ctxScore=Math.min(100,(ctx.length+constr.length+ex.length)/2);
+  const fmtScore=fmt?100:0;
+  const techScore=selectedTech!==null?100:0;
+  const toneScore=(tone?34:0)+(aud?33:0)+(avoid?33:0);
+
+  const dims=[roleScore,taskScore,ctxScore,fmtScore,techScore,toneScore];
+  const ids=['role','task','ctx','fmt','tech','tone'];
+  dims.forEach((v,i)=>{
+    const pct=Math.min(100,Math.round(v));
+    document.getElementById('sb-'+ids[i]).style.width=pct+'%';
+    document.getElementById('sv-'+ids[i]).textContent=pct;
+  });
+
+  const overall=Math.round(dims.reduce((a,b)=>a+b,0)/dims.length);
+  document.getElementById('score-num').textContent=overall;
+  const circumference=175.9;
+  const offset=circumference-(circumference*overall/100);
+  const ring=document.getElementById('score-ring');
+  ring.style.strokeDashoffset=offset;
+  ring.style.stroke=overall>=80?'#00c896':overall>=50?'#ff9500':'#ff4d2e';
+
+  const labels=['Start filling in the steps','Good start — keep going','Getting stronger','Solid foundation','Nearly there','Excellent prompt!'];
+  const descs=['Add a role and task to begin.','Add context to improve quality.','Format instructions will sharpen the output.','Try adding a prompting technique.','Polish the tone and audience.','This prompt is ready to use. Copy it below.'];
+  const idx=Math.min(5,Math.floor(overall/17));
+  document.getElementById('score-label').textContent=labels[idx];
+  document.getElementById('score-desc').textContent=descs[idx];
+}
+
+function copyBuilderPrompt(){
+  const text=document.getElementById('prompt-preview').textContent;
+  if(!text||text.includes('builds here'))return;
+  navigator.clipboard.writeText(text);
+  showToast('Prompt copied!');
+}
+
+function clearBuilder(){
+  ['b-role','b-task','b-context','b-constraints','b-examples','b-sections','b-audience','b-avoid'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  ['b-format','b-length','b-tone'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  selectedTech=null;
+  document.querySelectorAll('.tech-card').forEach(c=>c.classList.remove('selected'));
+  document.getElementById('tech-preview').textContent='Select a technique above to see how it will be added to your prompt.';
+  buildPrompt();
+  goStep(0,document.getElementById('sbtn-0'));
+}
+
+// ══════════════════════════════════════════════
+// FRAMEWORK
+// ══════════════════════════════════════════════
+const FRAMEWORKS=[
+  {label:'Recruiting',emoji:'🎯',badge:'b-r',bl:'Recruiting',
+   fields:[
+     {id:'fw-r-role',lbl:'Job Title',ph:'e.g. Senior Backend Engineer',conf:false},
+     {id:'fw-r-co',lbl:'Company name',ph:'e.g. Acme Corp',conf:true,default:'[Confidential Company]'},
+     {id:'fw-r-ind',lbl:'Industry / company type',ph:'e.g. 100-person fintech SaaS, fully remote',conf:false},
+     {id:'fw-r-must',lbl:'Must-have requirements',ph:'e.g. 5+ yrs Python, system design, team lead experience',conf:false},
+     {id:'fw-r-nice',lbl:'Nice-to-have skills',ph:'e.g. Kafka, AWS, startup experience',conf:false},
+   ],
+   build:f=>`Act as an expert HR copywriter specialising in inclusive hiring.\n\nWrite a compelling, bias-free job description for a ${f[0]||'[ROLE]'} role at ${f[1]||'[COMPANY]'} — ${f[2]||'[COMPANY TYPE]'}.\n\nMust-have requirements: ${f[3]||'[TO FILL]'}\nNice-to-have: ${f[4]||'[TO FILL]'}\n\nInclude:\n• Role overview (2–3 sentences, impact-focused)\n• Key responsibilities (6–8 bullets)\n• Must-have qualifications (keep short)\n• Nice-to-have skills\n• What we offer\n\nUse gender-neutral language. Avoid unnecessary degree requirements. Focus on what the person will do.`
   },
-  {
-    label: 'Onboarding', emoji: '🚀',
-    badge: 'badge-onboard', badgeLabel: 'Onboarding',
-    fields: [
-      { id: 'fw-on-role', label: 'New hire role', ph: 'e.g. Marketing Manager' },
-      { id: 'fw-on-co', label: 'Company context', ph: 'e.g. 150-person SaaS company, remote-first' },
-      { id: 'fw-on-goals', label: 'Key 90-day goals', ph: 'e.g. Launch first campaign, build stakeholder map' },
-    ],
-    build: f => `Create a detailed 30-60-90 day onboarding plan for a ${f[0]} joining ${f[1]}.\n\nKey goals for the first 90 days: ${f[2]}\n\nFor each phase provide: primary objectives, weekly activities, stakeholders to meet, and success metrics. Format as a structured table.`
+  {label:'Onboarding',emoji:'🚀',badge:'b-o',bl:'Onboarding',
+   fields:[
+     {id:'fw-o-role',lbl:'New hire role',ph:'e.g. Product Manager',conf:false},
+     {id:'fw-o-co',lbl:'Company name / context',ph:'e.g. Acme Corp',conf:true,default:'[No Name Company]'},
+     {id:'fw-o-size',lbl:'Company size & type',ph:'e.g. 80-person remote-first SaaS startup',conf:false},
+     {id:'fw-o-goals',lbl:'Key 90-day goals for this role',ph:'e.g. Ship first feature, build stakeholder map, hire 2 engineers',conf:false},
+   ],
+   build:f=>`Act as a strategic HR Business Partner.\n\nCreate a detailed 30-60-90 day onboarding plan for a ${f[0]||'[ROLE]'} joining ${f[1]||'[COMPANY]'} — ${f[2]||'[COMPANY TYPE]'}.\n\nKey goals for their first 90 days: ${f[3]||'[TO FILL]'}\n\nFor each phase (30 / 60 / 90 days):\n• Primary objectives (outcome-focused)\n• Key weekly activities\n• Stakeholders to meet and why\n• Deliverables / milestones\n• Manager check-in agenda\n• Success metrics\n\nFormat: structured table for overview + short narrative per phase.\nInclude: a note on psychological safety in the first 30 days.`
   },
-  {
-    label: 'Performance', emoji: '📈',
-    badge: 'badge-perf', badgeLabel: 'Performance',
-    fields: [
-      { id: 'fw-perf-role', label: 'Employee role', ph: 'e.g. Customer Success Manager' },
-      { id: 'fw-perf-sit', label: 'Situation / behaviour', ph: 'e.g. Missed 3 project deadlines in Q3' },
-      { id: 'fw-perf-impact', label: 'Business impact', ph: 'e.g. Delayed product launch, client complaints' },
-    ],
-    build: f => `Act as an experienced HR Business Partner. Write constructive feedback using the SBI model for a ${f[0]}.\n\nSituation: ${f[1]}\nImpact: ${f[2]}\n\nThe feedback should be specific, non-judgmental, and end with a clear, actionable request for behaviour change. 150-200 words.`
+  {label:'Performance',emoji:'📈',badge:'b-p',bl:'Performance',
+   fields:[
+     {id:'fw-p-role',lbl:'Employee role',ph:'e.g. Customer Success Manager',conf:false},
+     {id:'fw-p-name',lbl:'Employee name (optional)',ph:'e.g. Alex Smith',conf:true,default:'[Employee]'},
+     {id:'fw-p-sit',lbl:'Situation / observed behaviour',ph:'e.g. Missed 3 sprint deadlines in Q3 without flagging blockers',conf:false},
+     {id:'fw-p-impact',lbl:'Business / team impact',ph:'e.g. Delayed product launch, client escalation, team frustration',conf:false},
+   ],
+   build:f=>`Act as an experienced HR Business Partner trained in non-violent communication.\n\nWrite constructive feedback using the SBI (Situation–Behaviour–Impact) framework for ${f[1]||'[EMPLOYEE]'}, a ${f[0]||'[ROLE]'}.\n\nSituation: ${f[2]||'[TO FILL]'}\nImpact: ${f[3]||'[TO FILL]'}\n\nRequirements:\n• Specific and observable — describe what was seen/heard, not interpreted\n• Separate behaviour from person\n• Non-judgmental tone\n• End with a clear forward-looking request: "Going forward, I would like to see…"\n• 150–200 words\n• Tone: direct, respectful, coaching-oriented`
   },
-  {
-    label: 'Engagement', emoji: '💬',
-    badge: 'badge-engage', badgeLabel: 'Engagement',
-    fields: [
-      { id: 'fw-eng-co', label: 'Company / team', ph: 'e.g. Engineering team, 40 people' },
-      { id: 'fw-eng-focus', label: 'Engagement focus area', ph: 'e.g. Hybrid working, career growth' },
-      { id: 'fw-eng-prev', label: 'Previous survey themes (optional)', ph: 'e.g. Low scores on growth opportunities' },
-    ],
-    build: f => `Design a 10-question pulse survey for ${f[0]} focused on ${f[1]}.\n${f[2] ? `Context from previous surveys: ${f[2]}\n` : ''}Include a mix of Likert-scale questions (1-5) and 2 open-text questions. For each question, note which engagement driver it measures.`
+  {label:'Engagement',emoji:'💬',badge:'b-e',bl:'Engagement',
+   fields:[
+     {id:'fw-e-co',lbl:'Company / team name',ph:'e.g. Engineering team',conf:true,default:'[The team]'},
+     {id:'fw-e-size',lbl:'Team size & type',ph:'e.g. 45 engineers, remote-first, 6 nationalities',conf:false},
+     {id:'fw-e-focus',lbl:'Engagement focus area',ph:'e.g. Hybrid working, career growth, manager effectiveness',conf:false},
+     {id:'fw-e-prev',lbl:'Previous survey findings (optional)',ph:'e.g. Low scores on growth opportunities and recognition',conf:false},
+   ],
+   build:f=>`Act as an organisational psychologist.\n\nDesign a 12-question employee engagement survey for ${f[0]||'[TEAM]'} — ${f[1]||'[TEAM TYPE]'}.\n\nFocus area: ${f[2]||'[TO FILL]'}${f[3]?'\nContext from previous surveys: '+f[3]:''}\n\nFor each question:\n• Question text (Likert 1–5 or open-ended)\n• Engagement driver it measures\n• What a low score should trigger\n\nAlso provide:\n• A short survey intro message (why we run this, who sees it, how it's used)\n• 3 questions NOT to include and why`
   },
-  {
-    label: 'Learning & Dev', emoji: '🎓',
-    badge: 'badge-develop', badgeLabel: 'Learning & Dev',
-    fields: [
-      { id: 'fw-ld-topic', label: 'Training topic', ph: 'e.g. Inclusive leadership' },
-      { id: 'fw-ld-aud', label: 'Audience', ph: 'e.g. Mid-level managers, 20 people' },
-      { id: 'fw-ld-dur', label: 'Duration / format', ph: 'e.g. Half-day workshop + 4-week follow-up' },
-    ],
-    build: f => `Act as an L&D specialist. Design a training programme on "${f[0]}" for ${f[1]}.\n\nFormat: ${f[2]}\n\nInclude: 4 measurable learning objectives (Bloom's Taxonomy), a session agenda, 3 learning activities, assessment method, and how you will measure behaviour change 30 days after training.`
+  {label:'Learning & Dev',emoji:'🎓',badge:'b-l',bl:'Learning & Dev',
+   fields:[
+     {id:'fw-l-topic',lbl:'Training topic',ph:'e.g. Inclusive leadership, feedback skills, SQL fundamentals',conf:false},
+     {id:'fw-l-aud',lbl:'Audience',ph:'e.g. First-time managers, 20 people',conf:false},
+     {id:'fw-l-fmt',lbl:'Format & duration',ph:'e.g. Half-day workshop + 4-week follow-up activities',conf:false},
+     {id:'fw-l-co',lbl:'Company context (optional)',ph:'e.g. Fast-scaling tech company, team is globally distributed',conf:true,default:'[The company]'},
+   ],
+   build:f=>`Act as an L&D specialist.\n\nDesign a training programme on "${f[0]||'[TOPIC]'}" for ${f[1]||'[AUDIENCE]'}.\n\nFormat: ${f[2]||'[TO FILL]'}\nCompany context: ${f[3]||'[THE COMPANY]'}\n\nInclude:\n• 4 measurable learning objectives (Bloom's Taxonomy)\n• Session agenda with timing\n• 3 experiential learning activities (not just lectures) with facilitator notes\n• Assessment method\n• How to measure behaviour change 30 days post-training\n• Pre-reading suggestions\n• Facilitator notes for remote delivery`
   },
-  {
-    label: 'Exit', emoji: '🏁',
-    badge: 'badge-exit', badgeLabel: 'Exit',
-    fields: [
-      { id: 'fw-ex-role', label: 'Departing employee role', ph: 'e.g. Head of Product' },
-      { id: 'fw-ex-ten', label: 'Tenure', ph: 'e.g. 3.5 years' },
-      { id: 'fw-ex-reason', label: 'Known reason for leaving (if any)', ph: 'e.g. Career progression, relocation' },
-    ],
-    build: f => `Create a structured 45-minute exit interview script for a departing ${f[0]} with ${f[1]} tenure at the company.${f[2] ? ` Known reason for leaving: ${f[2]}.` : ''}\n\nInclude 12 questions covering: reasons for departure, manager relationship, culture, career growth, compensation, and improvement suggestions. Include a brief rating section and a graceful, positive close.`
+  {label:'Exit',emoji:'🏁',badge:'b-ex',bl:'Exit',
+   fields:[
+     {id:'fw-ex-role',lbl:'Departing employee role',ph:'e.g. Head of Product',conf:false},
+     {id:'fw-ex-name',lbl:'Employee name (optional)',ph:'e.g. Jordan Lee',conf:true,default:'[Departing Employee]'},
+     {id:'fw-ex-ten',lbl:'Tenure',ph:'e.g. 3.5 years',conf:false},
+     {id:'fw-ex-reason',lbl:'Known reason (optional)',ph:'e.g. Career progression, relocation, competing offer',conf:false},
+   ],
+   build:f=>`Create a structured 45-minute exit interview script for HR to use with ${f[1]||'[DEPARTING EMPLOYEE]'}, a departing ${f[0]||'[ROLE]'} with ${f[2]||'[TENURE]'} tenure.${f[3]?'\nKnown reason for leaving: '+f[3]:''}\n\nThe interviewer should be senior HR — not the line manager.\n\nInclude 14 questions covering:\n• Primary reason(s) for leaving (ask directly, then probe)\n• Manager relationship\n• Culture and values alignment\n• Career growth\n• Compensation\n• Team dynamics\n• What would have made them stay\n• Would they recommend working here?\n• Advice for their successor\n\nInclude: opening script (creating safety), closing script (ending positively), what NOT to say, note-taking template.`
   },
-  {
-    label: 'Labour Relations', emoji: '⚖️',
-    badge: 'badge-lr', badgeLabel: 'Labour Relations',
-    fields: [
-      { id: 'fw-lr-type', label: 'Document type', ph: 'e.g. Written warning, grievance acknowledgement' },
-      { id: 'fw-lr-issue', label: 'Issue / allegation', ph: 'e.g. Persistent lateness over 6 weeks' },
-      { id: 'fw-lr-outcome', label: 'Outcome / decision', ph: 'e.g. First written warning issued' },
-    ],
-    build: f => `Draft a formal ${f[0]} for an employee regarding: ${f[1]}.\n\nOutcome: ${f[2]}\n\nInclude: a clear summary of findings, the decision and rationale, specific expectations going forward, a review period, consequences of further breach, and right of appeal. Use formal but fair language. Keep to one page.`
+  {label:'Labour Relations',emoji:'⚖️',badge:'b-lr',bl:'Labour Relations',
+   fields:[
+     {id:'fw-lr-type',lbl:'Document type',ph:'e.g. Written warning, grievance acknowledgement, PIP',conf:false},
+     {id:'fw-lr-co',lbl:'Company name',ph:'e.g. Acme Corp',conf:true,default:'[The Company]'},
+     {id:'fw-lr-issue',lbl:'Issue / allegation (general)',ph:'e.g. Persistent lateness, conduct in team meeting',conf:false},
+     {id:'fw-lr-outcome',lbl:'Outcome / decision',ph:'e.g. First written warning issued',conf:false},
+   ],
+   build:f=>`Draft a formal ${f[0]||'[DOCUMENT TYPE]'} on behalf of ${f[1]||'[THE COMPANY]'} regarding: ${f[2]||'[ISSUE]'}.\n\nOutcome: ${f[3]||'[TO FILL]'}\n\nInclude:\n• Clear summary of the investigation and findings\n• The decision and rationale\n• Specific behavioural expectations going forward\n• Review period and what happens at the end of it\n• Consequences if same/similar behaviour recurs\n• Right to appeal (timeframe, to whom)\n\nUse "the employee" as a placeholder — no names.\nTone: formal, fair, measured — not punitive.\nFormat: official HR letter, 1 page.`
+  },
+  {label:'DEIB',emoji:'🌍',badge:'b-d',bl:'DEIB',
+   fields:[
+     {id:'fw-d-co',lbl:'Company name / type',ph:'e.g. 300-person software outsourcing company',conf:true,default:'the organisation'},
+     {id:'fw-d-focus',lbl:'DEIB focus area',ph:'e.g. Inclusive hiring, belonging, pay equity, representation',conf:false},
+     {id:'fw-d-stage',lbl:'Current maturity stage',ph:'e.g. Just starting out / has ERGs / data already collected',conf:false},
+   ],
+   build:f=>`Act as a Chief People Officer with DEIB expertise.\n\nWrite a 12-month DEIB strategy for ${f[0]||'the organisation'}.\n\nFocus area: ${f[1]||'[TO FILL]'}\nCurrent maturity: ${f[2]||'[TO FILL]'}\n\nInclude:\n• Current state assessment framework\n• 4 strategic pillars with specific initiatives\n• Quarterly milestones (Q1–Q4)\n• Budget considerations (high/med/low cost options)\n• Success metrics (quantitative and qualitative)\n• Governance: who owns this, how progress is reported\n• Common pitfalls to avoid in Year 1\n\nTone: strategic, evidence-informed, actionable — not performative.`
+  },
+  {label:'Wellbeing',emoji:'🧘',badge:'b-w',bl:'Wellbeing',
+   fields:[
+     {id:'fw-w-co',lbl:'Company name / type',ph:'e.g. 150-person tech company',conf:true,default:'the company'},
+     {id:'fw-w-focus',lbl:'Wellbeing focus',ph:'e.g. Burnout prevention, mental health, work-life balance',conf:false},
+     {id:'fw-w-ctx',lbl:'Context / trigger',ph:'e.g. Post-survey low wellbeing scores, high sick leave, rapid growth',conf:false},
+   ],
+   build:f=>`Act as an occupational health and HR specialist.\n\nCreate a wellbeing initiative plan for ${f[0]||'the company'} focused on ${f[1]||'[WELLBEING FOCUS]'}.\n\nContext: ${f[2]||'[TO FILL]'}\n\nInclude:\n• Root cause analysis framework (what's driving the issue)\n• 3 structural interventions (organisation-level)\n• 3 manager-level actions\n• 3 individual-level resources\n• Implementation timeline (30/60/90 days)\n• How to measure impact\n• What NOT to do (common wellness initiative mistakes)\n\nBase recommendations on evidence, not wellness clichés.`
   },
 ];
 
-function buildFrameworkUI() {
-  const nav = document.getElementById('fw-nav');
-  const panels = document.getElementById('fw-panels');
-
-  FRAMEWORKS.forEach((fw, i) => {
-    const btn = document.createElement('button');
-    btn.className = 'fw-nav-item' + (i === 0 ? ' active' : '');
-    btn.innerHTML = `<span class="fw-nav-num">${fw.emoji}</span>${fw.label}`;
-    btn.onclick = () => {
-      document.querySelectorAll('.fw-nav-item').forEach(b => b.classList.remove('active'));
+function buildFwUI(){
+  const nav=document.getElementById('fw-nav');
+  const panels=document.getElementById('fw-panels');
+  FRAMEWORKS.forEach((fw,i)=>{
+    const btn=document.createElement('button');
+    btn.className='fw-btn'+(i===0?' active':'');
+    btn.innerHTML=`<span class="fw-num">${fw.emoji}</span>${fw.label}`;
+    btn.onclick=()=>{
+      document.querySelectorAll('.fw-btn').forEach(b=>b.classList.remove('active'));
       btn.classList.add('active');
-      document.querySelectorAll('.fw-content').forEach(p => p.classList.remove('active'));
-      document.getElementById(`fw-panel-${i}`).classList.add('active');
+      document.querySelectorAll('.fw-panel').forEach(p=>p.classList.remove('active'));
+      document.getElementById('fwp-'+i).classList.add('active');
     };
     nav.appendChild(btn);
 
-    const panel = document.createElement('div');
-    panel.className = 'fw-content' + (i === 0 ? ' active' : '');
-    panel.id = `fw-panel-${i}`;
-    panel.innerHTML = `
-      <div class="fw-content-card">
+    const fieldsHtml=fw.fields.map(f=>{
+      const confHtml=f.conf?`<label class="fw-confidential"><input type="checkbox" id="conf-${f.id}" onchange="toggleConf('${f.id}','${f.default||'[Confidential]'}')" checked> <span>🔒 Use confidential placeholder instead of real name</span></label>`:'';
+      return `<div>
+        <div class="fw-field-lbl">${f.lbl}</div>
+        <input class="fi" id="${f.id}" placeholder="${f.ph}" oninput="updateFw(${i})">
+        ${confHtml}
+      </div>`;
+    }).join('');
+
+    const panel=document.createElement('div');
+    panel.className='fw-panel'+(i===0?' active':'');
+    panel.id='fwp-'+i;
+    panel.innerHTML=`
+      <div class="fw-card">
         <div>
-          <span class="fw-badge ${fw.badge}">${fw.badgeLabel}</span>
-          <div style="margin-top:10px;font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:700;color:var(--ink)">${fw.label} Prompt</div>
-          <div style="font-size:.85rem;color:var(--ink-muted);margin-top:4px;font-weight:300">Fill in the details and generate a ready-to-use prompt.</div>
+          <span class="badge ${fw.badge}">${fw.bl}</span>
+          <div style="margin-top:10px;font-family:'Syne',sans-serif;font-size:1.25rem;font-weight:700;color:var(--ink)">${fw.label} Prompt Generator</div>
+          <div style="font-size:.84rem;color:var(--ink-muted);margin-top:4px;font-weight:300">Fill in the fields. Confidential fields have a privacy option — use placeholders instead of real names.</div>
         </div>
-        ${fw.fields.map(f => `
-          <div>
-            <div class="fw-field-label">${f.label}</div>
-            <input class="field-input" id="${f.id}" placeholder="${f.ph}" oninput="updateFwPrompt(${i})">
-          </div>
-        `).join('')}
+        ${fieldsHtml}
         <div>
-          <div class="fw-field-label">Generated Prompt</div>
-          <div class="fw-result empty" id="fw-result-${i}">Fill in the fields above to generate your prompt.</div>
+          <div class="fw-field-lbl">Generated Prompt</div>
+          <div class="fw-result-box empty" id="fwr-${i}">Fill in the fields above to generate your prompt.</div>
         </div>
         <div style="display:flex;gap:10px;flex-wrap:wrap">
-          <button class="btn-primary" onclick="copyFwPrompt(${i})">
+          <button class="btn-primary" onclick="copyFw(${i})">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
             Copy Prompt
           </button>
-          <button class="btn-ghost" style="background:rgba(0,0,0,0.06);color:var(--ink-muted);border-color:var(--border-strong)" onclick="resetFw(${i})">
-            Clear
-          </button>
+          <button style="font-family:'DM Sans',sans-serif;font-size:.82rem;background:var(--surface);color:var(--ink-muted);border:1.5px solid var(--border-strong);border-radius:11px;padding:9px 18px;cursor:pointer" onclick="resetFw(${i})">Clear</button>
         </div>
-      </div>
-    `;
+      </div>`;
     panels.appendChild(panel);
   });
 }
 
-function updateFwPrompt(i) {
-  const fw = FRAMEWORKS[i];
-  const vals = fw.fields.map(f => document.getElementById(f.id).value.trim());
-  const result = document.getElementById(`fw-result-${i}`);
-  if (vals.every(v => !v)) {
-    result.textContent = 'Fill in the fields above to generate your prompt.';
-    result.classList.add('empty'); return;
+function toggleConf(fieldId,placeholder){
+  const cb=document.getElementById('conf-'+fieldId);
+  const inp=document.getElementById(fieldId);
+  if(cb.checked){
+    inp.dataset.real=inp.value;
+    if(!inp.value)inp.placeholder=placeholder;
+    else{inp.dataset.real=inp.value;inp.value='';inp.placeholder=placeholder;}
+  } else {
+    if(inp.dataset.real)inp.value=inp.dataset.real;
   }
-  const safeVals = vals.map(v => v || '—');
-  result.textContent = fw.build(safeVals);
-  result.classList.remove('empty');
+  // find which fw this belongs to
+  FRAMEWORKS.forEach((_,i)=>updateFw(i));
 }
 
-function copyFwPrompt(i) {
-  const result = document.getElementById(`fw-result-${i}`);
-  if (result.classList.contains('empty')) return;
-  navigator.clipboard.writeText(result.textContent);
-  showToast();
+function getFwVal(f){
+  const el=document.getElementById(f.id);if(!el)return'';
+  if(f.conf){
+    const cb=document.getElementById('conf-'+f.id);
+    if(cb&&cb.checked)return f.default||'[Confidential]';
+  }
+  return el.value.trim();
 }
 
-function resetFw(i) {
-  FRAMEWORKS[i].fields.forEach(f => { document.getElementById(f.id).value = ''; });
-  updateFwPrompt(i);
+function updateFw(i){
+  const fw=FRAMEWORKS[i];
+  const vals=fw.fields.map(f=>getFwVal(f));
+  const result=document.getElementById('fwr-'+i);
+  if(vals.every(v=>!v)){result.textContent='Fill in the fields above to generate your prompt.';result.classList.add('empty');return;}
+  result.textContent=fw.build(vals);result.classList.remove('empty');
 }
 
-// ─── NAV ────────────────────────────────────────────
-function showSection(id, tab) {
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.getElementById('sec-' + id).classList.add('active');
-  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+function copyFw(i){
+  const r=document.getElementById('fwr-'+i);
+  if(r.classList.contains('empty'))return;
+  navigator.clipboard.writeText(r.textContent);showToast();
+}
+
+function resetFw(i){
+  FRAMEWORKS[i].fields.forEach(f=>{
+    const el=document.getElementById(f.id);if(el){el.value='';delete el.dataset.real;}
+    if(f.conf){const cb=document.getElementById('conf-'+f.id);if(cb)cb.checked=true;}
+  });
+  updateFw(i);
+}
+
+// ══════════════════════════════════════════════
+// NAV & TOAST
+// ══════════════════════════════════════════════
+function showSection(id,tab){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById('sec-'+id).classList.add('active');
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
   tab.classList.add('active');
 }
 
-// ─── TOAST ──────────────────────────────────────────
-function showToast(msg = 'Copied to clipboard!') {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2200);
+function showToast(msg='Copied to clipboard!'){
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
 }
 
-// ─── INIT ────────────────────────────────────────────
+// INIT
 renderPrompts();
-buildFrameworkUI();
+renderTechCards();
+renderPatterns();
+buildFwUI();
 </script>
 </body>
 </html>
